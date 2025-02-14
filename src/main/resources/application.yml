@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: nbc-w6-newsfeed
+
+---
+spring:
+  profiles:
+    active: prod
+
+---
+spring:
+  profiles:
+    active: local
