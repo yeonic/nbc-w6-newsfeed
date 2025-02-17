@@ -1,11 +1,11 @@
-package com.chinhae.newsfeed.account.service;
+package com.chinhae.newsfeed.domain.account.service;
 
-import com.chinhae.newsfeed.account.dto.Request.UserLoginRequestDto;
-import com.chinhae.newsfeed.account.dto.Request.UserSignupRequestDto;
-import com.chinhae.newsfeed.account.dto.Response.UserLoginResponseDto;
-import com.chinhae.newsfeed.account.dto.Response.UserSignupResponsetDto;
-import com.chinhae.newsfeed.account.entity.User;
-import com.chinhae.newsfeed.account.repository.AccountRepository;
+import com.chinhae.newsfeed.domain.account.dto.Request.UserLoginRequestDto;
+import com.chinhae.newsfeed.domain.account.dto.Request.UserSignupRequestDto;
+import com.chinhae.newsfeed.domain.account.dto.Response.UserLoginResponseDto;
+import com.chinhae.newsfeed.domain.account.dto.Response.UserSignupResponsetDto;
+import com.chinhae.newsfeed.domain.account.entity.User;
+import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
 import com.chinhae.newsfeed.global.config.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

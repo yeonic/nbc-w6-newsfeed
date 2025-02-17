@@ -1,5 +1,6 @@
-package com.chinhae.newsfeed.account.entity;
+package com.chinhae.newsfeed.domain.account.entity;
 
+import com.chinhae.newsfeed.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "user")
 @NoArgsConstructor
-public class User extends BaseEntity{
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

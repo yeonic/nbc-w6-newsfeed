@@ -1,4 +1,4 @@
-package com.chinhae.newsfeed.account.dto.Request;
+package com.chinhae.newsfeed.domain.account.dto.Request;
 
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
-package com.chinhae.newsfeed.account.repository;
+package com.chinhae.newsfeed.domain.account.repository;
 
-import com.chinhae.newsfeed.account.entity.User;
+import com.chinhae.newsfeed.domain.account.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

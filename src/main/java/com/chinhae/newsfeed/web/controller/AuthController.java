@@ -1,10 +1,10 @@
-package com.chinhae.newsfeed.account.controller;
+package com.chinhae.newsfeed.web.controller;
 
-import com.chinhae.newsfeed.account.dto.Request.UserLoginRequestDto;
-import com.chinhae.newsfeed.account.dto.Request.UserSignupRequestDto;
-import com.chinhae.newsfeed.account.dto.Response.UserLoginResponseDto;
-import com.chinhae.newsfeed.account.dto.Response.UserSignupResponsetDto;
-import com.chinhae.newsfeed.account.service.AccountService;
+import com.chinhae.newsfeed.domain.account.dto.Request.UserLoginRequestDto;
+import com.chinhae.newsfeed.domain.account.dto.Request.UserSignupRequestDto;
+import com.chinhae.newsfeed.domain.account.dto.Response.UserLoginResponseDto;
+import com.chinhae.newsfeed.domain.account.dto.Response.UserSignupResponsetDto;
+import com.chinhae.newsfeed.domain.account.service.AccountService;
 import com.chinhae.newsfeed.global.dto.Response;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

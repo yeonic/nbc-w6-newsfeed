@@ -1,4 +1,4 @@
-package com.chinhae.newsfeed.account.entity;
+package com.chinhae.newsfeed.baseEntity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
