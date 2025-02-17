@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "user")
 @NoArgsConstructor
-public class User extends BaseEntity {
+public class Account extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,10 +28,14 @@ public class User extends BaseEntity {
     @Column
     private LocalDate birthDate; // 생년월일
 
-    public User(String email, String password, String username, LocalDate birthDate) {
+    public Account(String email, String password, String username, LocalDate birthDate) {
         this.email = email;
         this.password = password;
         this.username = username;
         this.birthDate = birthDate;
+    }
+
+    public void update(String newPassword) {
+        this.password = newPassword;
     }
 }

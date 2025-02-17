@@ -1,11 +1,10 @@
 package com.chinhae.newsfeed.domain.account.service;
 
-import com.chinhae.newsfeed.domain.account.dto.Request.UserLoginRequestDto;
-import com.chinhae.newsfeed.domain.account.dto.Request.UserSignupRequestDto;
-import com.chinhae.newsfeed.domain.account.dto.Response.UserLoginResponseDto;
-import com.chinhae.newsfeed.domain.account.dto.Response.UserResponseDto;
-import com.chinhae.newsfeed.domain.account.dto.Response.UserSignupResponsetDto;
-import com.chinhae.newsfeed.domain.account.entity.User;
+import com.chinhae.newsfeed.domain.account.dto.Request.AccountLoginRequestDto;
+import com.chinhae.newsfeed.domain.account.dto.Request.AccountSignupRequestDto;
+import com.chinhae.newsfeed.domain.account.dto.Request.AccountUpdateRequestDto;
+import com.chinhae.newsfeed.domain.account.dto.Response.*;
+import com.chinhae.newsfeed.domain.account.entity.Account;
 import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
 import com.chinhae.newsfeed.global.config.PasswordEncoder;
 import com.chinhae.newsfeed.global.messages.LoginConst;
@@ -21,20 +20,20 @@ public class AccountService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public UserSignupResponsetDto save(UserSignupRequestDto requestDto) { // 회원가입
+    public AccountSignupResponsetDto save(AccountSignupRequestDto requestDto) { // 회원가입
         if (accountRepository.existsByEmail(requestDto.getEmail())) {
             throw new IllegalArgumentException(LoginConst.EMAIL_EXIST_MESSAGE);
         }
         String encodePassword = passwordEncoder.encode(requestDto.getPassword());
-        User user = new User(requestDto.getEmail(), encodePassword, requestDto.getUsername(), requestDto.getBirthDate());
+        Account user = new Account(requestDto.getEmail(), encodePassword, requestDto.getUsername(), requestDto.getBirthDate());
         accountRepository.save(user);
 
-        return new UserSignupResponsetDto(user.getEmail(), user.getUsername(), user.getCreated_at());
+        return new AccountSignupResponsetDto(user.getEmail(), user.getUsername(), user.getCreated_at());
     }
 
     @Transactional
-    public UserLoginResponseDto loginUser(UserLoginRequestDto requestDto) { // 로그인
-        User user = accountRepository.findByEmail(requestDto.getEmail()).orElseThrow(
+    public UserLoginResponseDto loginUser(AccountLoginRequestDto requestDto) { // 로그인
+        Account user = accountRepository.findByEmail(requestDto.getEmail()).orElseThrow(
                 () -> new IllegalArgumentException(LoginConst.LOGIN_FAILED_MESSAGE)
         );
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())){
@@ -44,18 +43,43 @@ public class AccountService {
         return new UserLoginResponseDto(user.getEmail(), user.getUsername(), user.getCreated_at());
     }
 
-    public UserResponseDto findUser(Long userId) { // 사용자 조회
-        User user = accountRepository.findById(userId).orElseThrow(
+    @Transactional(readOnly = true)
+    public AccountResponseDto findUser(Long userId) { // 사용자 조회
+        Account user = accountRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException(LoginConst.USER_NOTEXIST_MESSAGE)
         );
-        return new UserResponseDto(user.getEmail(), user.getUsername());
+
+        return new AccountResponseDto(user.getEmail(), user.getUsername());
     }
 
+    @Transactional
     public void deleteUser(Long userId) { // 회원 탈퇴
         accountRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException(LoginConst.DELETE_FAILED_MESSAGE)
         );
 
         accountRepository.deleteById(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public AccountUpdateFormResponse updateForm(Long usersId) { // 계정 정보 수정 폼
+        Account user = accountRepository.findById(usersId).orElseThrow(
+                () -> new IllegalArgumentException(LoginConst.USER_NOTEXIST_MESSAGE)
+        );
+
+        return new AccountUpdateFormResponse(user.getEmail(), user.getUsername(), user.getBirthDate());
+    }
+
+    @Transactional
+    public AccountUpdateResponseDto update(Long userId, AccountUpdateRequestDto requestDto) { // 계정 정보 수정
+        Account user = accountRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException(LoginConst.USER_NOTEXIST_MESSAGE)
+        );
+        if (!passwordEncoder.matches(requestDto.getCurrentPassword(),user.getPassword())){
+            throw new IllegalArgumentException(LoginConst.PASSWORD_NOT_MATCH);
+        }
+        user.update(requestDto.getNewPassword());
+
+        return new AccountUpdateResponseDto(user.getEmail(), user.getUsername(), user.getCreated_at(), user.getUpdated_at());
     }
 }
