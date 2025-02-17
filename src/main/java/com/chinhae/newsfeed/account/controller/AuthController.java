@@ -40,7 +40,7 @@ public class AuthController {
         return Response.of("로그아웃을 성공했습니다.");
     }
 
-    @PostMapping("/auth/signup") // 회원가입
+    @PostMapping("api/auth/signup") // 회원가입
     public Response<UserSignupResponsetDto> signup(@RequestBody UserSignupRequestDto requestDto){
         UserSignupResponsetDto save = accountService.save(requestDto);
 
