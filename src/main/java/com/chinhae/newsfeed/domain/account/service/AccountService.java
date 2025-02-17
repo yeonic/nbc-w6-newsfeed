@@ -3,10 +3,12 @@ package com.chinhae.newsfeed.domain.account.service;
 import com.chinhae.newsfeed.domain.account.dto.Request.UserLoginRequestDto;
 import com.chinhae.newsfeed.domain.account.dto.Request.UserSignupRequestDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.UserLoginResponseDto;
+import com.chinhae.newsfeed.domain.account.dto.Response.UserResponseDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.UserSignupResponsetDto;
 import com.chinhae.newsfeed.domain.account.entity.User;
 import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
 import com.chinhae.newsfeed.global.config.PasswordEncoder;
+import com.chinhae.newsfeed.global.messages.LoginConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +23,7 @@ public class AccountService {
     @Transactional
     public UserSignupResponsetDto save(UserSignupRequestDto requestDto) { // 회원가입
         if (accountRepository.existsByEmail(requestDto.getEmail())) {
-            throw new IllegalArgumentException("해당 이메일은 사용중입니다");
+            throw new IllegalArgumentException(LoginConst.EMAIL_EXIST_MESSAGE);
         }
         String encodePassword = passwordEncoder.encode(requestDto.getPassword());
         User user = new User(requestDto.getEmail(), encodePassword, requestDto.getUsername(), requestDto.getBirthDate());
@@ -33,12 +35,27 @@ public class AccountService {
     @Transactional
     public UserLoginResponseDto loginUser(UserLoginRequestDto requestDto) { // 로그인
         User user = accountRepository.findByEmail(requestDto.getEmail()).orElseThrow(
-                () -> new IllegalArgumentException("이메일이 같지않습니다.")
+                () -> new IllegalArgumentException(LoginConst.LOGIN_FAILED_MESSAGE)
         );
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())){
-            throw new IllegalArgumentException("비밀번호가 일치하지않습니다.");
+            throw new IllegalArgumentException(LoginConst.LOGIN_FAILED_MESSAGE);
         }
 
         return new UserLoginResponseDto(user.getEmail(), user.getUsername(), user.getCreated_at());
+    }
+
+    public UserResponseDto findUser(Long userId) { // 사용자 조회
+        User user = accountRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException(LoginConst.USER_NOTEXIST_MESSAGE)
+        );
+        return new UserResponseDto(user.getEmail(), user.getUsername());
+    }
+
+    public void deleteUser(Long userId) { // 회원 탈퇴
+        accountRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException(LoginConst.DELETE_FAILED_MESSAGE)
+        );
+
+        accountRepository.deleteById(userId);
     }
 }

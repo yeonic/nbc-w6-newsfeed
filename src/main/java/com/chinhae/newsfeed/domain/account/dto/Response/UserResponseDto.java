@@ -6,4 +6,11 @@ import lombok.Getter;
 
 public class UserResponseDto {
 
+    private final String email;
+    private final String username;
+
+    public UserResponseDto(String email, String username) {
+        this.email = email;
+        this.username = username;
+    }
 }
