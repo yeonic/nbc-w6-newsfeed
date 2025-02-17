@@ -2,10 +2,8 @@ package com.chinhae.newsfeed.domain.account.service;
 
 import com.chinhae.newsfeed.domain.account.dto.Request.UserLoginRequestDto;
 import com.chinhae.newsfeed.domain.account.dto.Request.UserSignupRequestDto;
-import com.chinhae.newsfeed.domain.account.dto.Response.UserLoginResponseDto;
-import com.chinhae.newsfeed.domain.account.dto.Response.UserResponseDto;
-import com.chinhae.newsfeed.domain.account.dto.Response.UserSignupResponsetDto;
-import com.chinhae.newsfeed.domain.account.dto.Response.UserUpdateResponse;
+import com.chinhae.newsfeed.domain.account.dto.Request.AccountUpdateRequestDto;
+import com.chinhae.newsfeed.domain.account.dto.Response.*;
 import com.chinhae.newsfeed.domain.account.entity.User;
 import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
 import com.chinhae.newsfeed.global.config.PasswordEncoder;
@@ -63,12 +61,23 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public UserUpdateResponse updateForm(Long usersId) { // 유저 수정 폼
+    public AccountUpdateFormResponse updateForm(Long usersId) { // 유저 수정 폼
         User user = accountRepository.findById(usersId).orElseThrow(
                 () -> new IllegalArgumentException(LoginConst.USER_NOTEXIST_MESSAGE)
         );
 
-        return new UserUpdateResponse(user.getEmail(), user.getUsername(), user.getBirthDate());
+        return new AccountUpdateFormResponse(user.getEmail(), user.getUsername(), user.getBirthDate());
     }
 
+    public AccountUpdateResponseDto update(Long userId, AccountUpdateRequestDto requestDto) { // 계정 정보 수정
+        User user = accountRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException(LoginConst.USER_NOTEXIST_MESSAGE)
+        );
+        if (!passwordEncoder.matches(requestDto.getCurrentPassword(),user.getPassword())){
+            throw new IllegalArgumentException(LoginConst.PASSWORD_NOT_MATCH);
+        }
+        user.update(requestDto.getNewPassword(), requestDto.getBio(), requestDto.getProfileImgUrl());
+
+        return new AccountUpdateResponseDto(user.getEmail(), user.getUsername(), user.getBio(), user.getProfileImgUrl(), user.getCreated_at(), user.getUpdated_at());
+    }
 }

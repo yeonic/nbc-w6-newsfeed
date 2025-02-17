@@ -6,12 +6,12 @@ import java.time.LocalDate;
 
 @Getter
 
-public class UserUpdateResponse {
+public class AccountUpdateFormResponse {
     private final String email;
     private final String username;
     private final LocalDate birthDate;
 
-    public UserUpdateResponse(String email, String username, LocalDate birthDate) {
+    public AccountUpdateFormResponse(String email, String username, LocalDate birthDate) {
         this.email = email;
         this.username = username;
         this.birthDate = birthDate;
