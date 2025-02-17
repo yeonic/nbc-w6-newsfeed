@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-
 public class AuthController {
 
     private final AccountService accountService;
@@ -25,9 +24,7 @@ public class AuthController {
     @PostMapping("/api/auth/login") // 로그인
     public Response<UserLoginResponseDto> login(@RequestBody AccountLoginRequestDto requestDto, HttpServletRequest request){
         UserLoginResponseDto loginUser = accountService.loginUser(requestDto);
-
         HttpSession session = request.getSession();
-
         session.setAttribute("LOGIN_USER", loginUser);
 
         return Response.of(loginUser);

@@ -5,7 +5,6 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-
 public class AccountUpdateFormResponse {
     private final String email;
     private final String username;

@@ -48,6 +48,7 @@ public class AccountService {
         Account user = accountRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException(LoginConst.USER_NOTEXIST_MESSAGE)
         );
+
         return new AccountResponseDto(user.getEmail(), user.getUsername());
     }
 
@@ -69,6 +70,7 @@ public class AccountService {
         return new AccountUpdateFormResponse(user.getEmail(), user.getUsername(), user.getBirthDate());
     }
 
+    @Transactional
     public AccountUpdateResponseDto update(Long userId, AccountUpdateRequestDto requestDto) { // 계정 정보 수정
         Account user = accountRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException(LoginConst.USER_NOTEXIST_MESSAGE)

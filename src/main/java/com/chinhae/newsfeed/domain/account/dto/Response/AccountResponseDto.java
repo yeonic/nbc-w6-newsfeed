@@ -3,7 +3,6 @@ package com.chinhae.newsfeed.domain.account.dto.Response;
 import lombok.Getter;
 
 @Getter
-
 public class AccountResponseDto {
 
     private final String email;
