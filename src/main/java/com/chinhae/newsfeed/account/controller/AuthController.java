@@ -1,8 +1,8 @@
 package com.chinhae.newsfeed.account.controller;
 
-import com.chinhae.newsfeed.account.dto.Request.UserSigninRequestDto;
+import com.chinhae.newsfeed.account.dto.Request.UserLoginRequestDto;
 import com.chinhae.newsfeed.account.dto.Request.UserSignupRequestDto;
-import com.chinhae.newsfeed.account.dto.Response.UserSigninResponseDto;
+import com.chinhae.newsfeed.account.dto.Response.UserLoginResponseDto;
 import com.chinhae.newsfeed.account.dto.Response.UserSignupResponsetDto;
 import com.chinhae.newsfeed.account.service.AccountService;
 import com.chinhae.newsfeed.global.dto.Response;
@@ -21,8 +21,8 @@ public class AuthController {
     private final AccountService accountService;
 
     @PostMapping("api/auth/login") // 로그인
-    public Response<UserSigninResponseDto> login(@RequestBody UserSigninRequestDto requestDto, HttpServletRequest request){
-        UserSigninResponseDto loginUser = accountService.loginUser(requestDto);
+    public Response<UserLoginResponseDto> login(@RequestBody UserLoginRequestDto requestDto, HttpServletRequest request){
+        UserLoginResponseDto loginUser = accountService.loginUser(requestDto);
 
         HttpSession session = request.getSession();
 
