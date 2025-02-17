@@ -1,7 +1,7 @@
 package com.chinhae.newsfeed.web.controller;
 
 import com.chinhae.newsfeed.domain.account.dto.Request.AccountUpdateRequestDto;
-import com.chinhae.newsfeed.domain.account.dto.Response.UserResponseDto;
+import com.chinhae.newsfeed.domain.account.dto.Response.AccountResponseDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.AccountUpdateFormResponse;
 import com.chinhae.newsfeed.domain.account.dto.Response.AccountUpdateResponseDto;
 import com.chinhae.newsfeed.domain.account.service.AccountService;
@@ -17,8 +17,8 @@ public class UserController {
     private final AccountService accountService;
 
     @GetMapping("/api/users/{userId}") // 유저 조회
-    public Response<UserResponseDto> findUser(@PathVariable Long userId){
-        UserResponseDto allUser = accountService.findUser(userId);
+    public Response<AccountResponseDto> findUser(@PathVariable Long userId){
+        AccountResponseDto allUser = accountService.findUser(userId);
         return Response.of(allUser);
     }
 

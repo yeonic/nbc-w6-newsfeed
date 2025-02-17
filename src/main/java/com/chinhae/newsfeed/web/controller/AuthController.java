@@ -1,12 +1,11 @@
 package com.chinhae.newsfeed.web.controller;
 
-import com.chinhae.newsfeed.domain.account.dto.Request.UserLoginRequestDto;
-import com.chinhae.newsfeed.domain.account.dto.Request.UserSignupRequestDto;
+import com.chinhae.newsfeed.domain.account.dto.Request.AccountLoginRequestDto;
+import com.chinhae.newsfeed.domain.account.dto.Request.AccountSignupRequestDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.UserLoginResponseDto;
-import com.chinhae.newsfeed.domain.account.dto.Response.UserSignupResponsetDto;
+import com.chinhae.newsfeed.domain.account.dto.Response.AccountSignupResponsetDto;
 import com.chinhae.newsfeed.domain.account.service.AccountService;
 import com.chinhae.newsfeed.global.dto.Response;
-import com.chinhae.newsfeed.global.messages.LoginConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ public class AuthController {
     private final AccountService accountService;
 
     @PostMapping("/api/auth/login") // 로그인
-    public Response<UserLoginResponseDto> login(@RequestBody UserLoginRequestDto requestDto, HttpServletRequest request){
+    public Response<UserLoginResponseDto> login(@RequestBody AccountLoginRequestDto requestDto, HttpServletRequest request){
         UserLoginResponseDto loginUser = accountService.loginUser(requestDto);
 
         HttpSession session = request.getSession();
@@ -44,8 +43,8 @@ public class AuthController {
     }
 
     @PostMapping("/api/auth/signup") // 회원가입
-    public Response<UserSignupResponsetDto> signup(@RequestBody UserSignupRequestDto requestDto){
-        UserSignupResponsetDto save = accountService.save(requestDto);
+    public Response<AccountSignupResponsetDto> signup(@RequestBody AccountSignupRequestDto requestDto){
+        AccountSignupResponsetDto save = accountService.save(requestDto);
 
         return Response.of(save);
     }

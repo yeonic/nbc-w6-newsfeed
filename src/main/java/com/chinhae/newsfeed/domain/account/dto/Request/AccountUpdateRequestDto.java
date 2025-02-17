@@ -7,6 +7,4 @@ import lombok.Getter;
 public class AccountUpdateRequestDto {
     private String currentPassword;
     private String newPassword;
-    private String bio;
-    private String profileImgUrl;
 }
