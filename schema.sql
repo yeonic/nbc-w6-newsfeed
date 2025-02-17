@@ -22,7 +22,6 @@ create table profiles
     bio             varchar(160),
     friends_count   int      default 0,
     post_count      int      default 0,
-    birthdate       date,
     created_at      datetime default current_timestamp,
     updated_at      datetime default current_timestamp on update current_timestamp,
 
