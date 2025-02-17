@@ -32,7 +32,7 @@ public class AccountService {
     }
 
     @Transactional
-    public UserLoginResponseDto loginUser(AccountLoginRequestDto requestDto) { // 로그인
+    public AccountLoginResponseDto loginUser(AccountLoginRequestDto requestDto) { // 로그인
         Account user = accountRepository.findByEmail(requestDto.getEmail()).orElseThrow(
                 () -> new IllegalArgumentException(LoginConst.LOGIN_FAILED_MESSAGE)
         );
@@ -40,7 +40,7 @@ public class AccountService {
             throw new IllegalArgumentException(LoginConst.LOGIN_FAILED_MESSAGE);
         }
 
-        return new UserLoginResponseDto(user.getEmail(), user.getUsername(), user.getCreated_at());
+        return new AccountLoginResponseDto(user.getEmail(), user.getUsername(), user.getCreated_at());
     }
 
     @Transactional(readOnly = true)
