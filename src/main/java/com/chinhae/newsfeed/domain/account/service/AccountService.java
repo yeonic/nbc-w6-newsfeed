@@ -5,6 +5,7 @@ import com.chinhae.newsfeed.domain.account.dto.Request.UserSignupRequestDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.UserLoginResponseDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.UserResponseDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.UserSignupResponsetDto;
+import com.chinhae.newsfeed.domain.account.dto.Response.UserUpdateResponse;
 import com.chinhae.newsfeed.domain.account.entity.User;
 import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
 import com.chinhae.newsfeed.global.config.PasswordEncoder;
@@ -44,6 +45,7 @@ public class AccountService {
         return new UserLoginResponseDto(user.getEmail(), user.getUsername(), user.getCreated_at());
     }
 
+    @Transactional(readOnly = true)
     public UserResponseDto findUser(Long userId) { // 사용자 조회
         User user = accountRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException(LoginConst.USER_NOTEXIST_MESSAGE)
@@ -51,6 +53,7 @@ public class AccountService {
         return new UserResponseDto(user.getEmail(), user.getUsername());
     }
 
+    @Transactional
     public void deleteUser(Long userId) { // 회원 탈퇴
         accountRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException(LoginConst.DELETE_FAILED_MESSAGE)
@@ -58,4 +61,14 @@ public class AccountService {
 
         accountRepository.deleteById(userId);
     }
+
+    @Transactional(readOnly = true)
+    public UserUpdateResponse updateForm(Long usersId) { // 유저 수정 폼
+        User user = accountRepository.findById(usersId).orElseThrow(
+                () -> new IllegalArgumentException(LoginConst.USER_NOTEXIST_MESSAGE)
+        );
+
+        return new UserUpdateResponse(user.getEmail(), user.getUsername(), user.getBirthDate());
+    }
+
 }

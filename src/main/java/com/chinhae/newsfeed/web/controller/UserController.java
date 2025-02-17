@@ -1,6 +1,7 @@
 package com.chinhae.newsfeed.web.controller;
 
 import com.chinhae.newsfeed.domain.account.dto.Response.UserResponseDto;
+import com.chinhae.newsfeed.domain.account.dto.Response.UserUpdateResponse;
 import com.chinhae.newsfeed.domain.account.service.AccountService;
 import com.chinhae.newsfeed.global.dto.Response;
 import com.chinhae.newsfeed.global.messages.LoginConst;
@@ -25,8 +26,11 @@ public class UserController {
         accountService.deleteUser(userId);
     }
 
-    @GetMapping("/api/users/{usersId}/setting/account")
-    public
+    @GetMapping("/api/users/{usersId}/setting/account") // 유저 수정 폼
+    public Response<UserUpdateResponse> updateForm(@PathVariable Long usersId){
+        UserUpdateResponse updateForm = accountService.updateForm(usersId);
+        return Response.of(updateForm);
+    }
 
 
 }
