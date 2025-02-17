@@ -1,5 +1,9 @@
 package com.chinhae.newsfeed.global.messages;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class LoginConst {
     public static final String LOGIN_FAILED_MESSAGE = "로그인 실패했습니다.";
     public static final String DELETE_FAILED_MESSAGE = "회원 탈퇴가 실패했습니다.";
