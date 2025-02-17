@@ -8,6 +8,7 @@ import com.chinhae.newsfeed.domain.account.service.AccountService;
 import com.chinhae.newsfeed.global.dto.Response;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +41,7 @@ public class AuthController {
     }
 
     @PostMapping("/api/auth/signup") // 회원가입
-    public Response<AccountSignupResponsetDto> signup(@RequestBody AccountSignupRequestDto requestDto){
+    public Response<AccountSignupResponsetDto> signup(@Valid @RequestBody AccountSignupRequestDto requestDto){
         AccountSignupResponsetDto save = accountService.save(requestDto);
 
         return Response.of(save);
