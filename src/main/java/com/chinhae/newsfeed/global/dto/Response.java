@@ -31,7 +31,7 @@ public class Response<T> {
    * 빈 데이터로 응답하고 싶을 때 사용
    * 그냥 HttpStatus.No_CONTENT 사용해도 될지 고민하기
    */
-  public static <T> Response<List<T>> empty() {
+  public static <T> Response<List<T>> empty() { //Response.of(DTO)
     List<T> emptyList = Collections.emptyList();
     return new Response<>(emptyList);
   }
@@ -41,12 +41,12 @@ public class Response<T> {
    */
   public static <T> Response<T> of(T data) {
     return new Response<>(data);
-  }
+  } // 데이터만 들어갈때
 
   /**
    * Paging을 사용하는 Controller에서 사용(필수!)
    */
   public static <T> Response<T> of(T data, PagingRes page) {
     return new Response<>(data, page);
-  }
+  } // 페이지네이션이 들어갈때
 }
