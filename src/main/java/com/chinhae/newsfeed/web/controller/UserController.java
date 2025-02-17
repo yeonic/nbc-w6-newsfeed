@@ -5,10 +5,7 @@ import com.chinhae.newsfeed.domain.account.service.AccountService;
 import com.chinhae.newsfeed.global.dto.Response;
 import com.chinhae.newsfeed.global.messages.LoginConst;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +24,9 @@ public class UserController {
     public void deleteUser(@PathVariable Long userId){
         accountService.deleteUser(userId);
     }
+
+    @GetMapping("/api/users/{usersId}/setting/account")
+    public
 
 
 }

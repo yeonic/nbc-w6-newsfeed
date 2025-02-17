@@ -2,6 +2,10 @@ spring:
   application:
     name: nbc-w6-newsfeed
 
+  jpa:
+    hibernate:
+      ddl-auto: update
+
 ---
 spring:
   profiles:
@@ -12,12 +16,3 @@ spring:
   profiles:
     active: local
 
-  datasource:
-    url: jdbc:mysql://localhost:3306/newsfeed
-    username: root
-    password: 1878
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: update
