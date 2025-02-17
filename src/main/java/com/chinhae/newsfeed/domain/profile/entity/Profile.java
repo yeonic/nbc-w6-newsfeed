@@ -2,7 +2,7 @@ package com.chinhae.newsfeed.domain.profile.entity;
 
 import static com.chinhae.newsfeed.global.util.StringUtil.getOrDefaultEmpty;
 
-import com.chinhae.newsfeed.domain.account.entity.User;
+import com.chinhae.newsfeed.domain.account.entity.Account;
 import com.chinhae.newsfeed.domain.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,7 +53,7 @@ public class Profile extends BaseEntity {
 
   @ManyToOne
   @JoinColumn(name = "account_id")
-  private User user;
+  private Account user;
 
   @Builder
   public Profile(String nickname, String profileImgUrl, String bio) {
