@@ -1,13 +1,12 @@
 package com.chinhae.newsfeed.web.controller;
 
+import com.chinhae.newsfeed.domain.account.dto.Request.AccountDeleteRequestDto;
 import com.chinhae.newsfeed.domain.account.dto.Request.AccountUpdateRequestDto;
-import com.chinhae.newsfeed.domain.account.dto.Response.AccountLoginResponseDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.AccountResponseDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.AccountUpdateFormResponse;
 import com.chinhae.newsfeed.domain.account.dto.Response.AccountUpdateResponseDto;
 import com.chinhae.newsfeed.domain.account.service.AccountService;
 import com.chinhae.newsfeed.global.dto.Response;
-import com.chinhae.newsfeed.global.messages.LoginConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +29,9 @@ public class UserController {
   }
 
   @DeleteMapping("/api/users/{userId}") // 회원 탈퇴
-  public void deleteUser(@PathVariable Long userId) {
-    accountService.deleteUser(userId);
+  public void deleteUser(@PathVariable Long userId,
+      @RequestBody AccountDeleteRequestDto requestDto) {
+    accountService.deleteUser(userId, requestDto);
   }
 
   @GetMapping("/api/users/{userId}/setting/account") // 계정 정보 수정 폼
