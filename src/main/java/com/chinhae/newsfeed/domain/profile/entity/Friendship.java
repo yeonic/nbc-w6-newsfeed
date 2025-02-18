@@ -23,28 +23,30 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 public class Friendship extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "from_profile_id")
-  private Profile fromProfile;
+    @ManyToOne
+    @JoinColumn(name = "from_profile_id")
+    private Profile fromProfile;
 
-  @ManyToOne
-  @JoinColumn(name = "to_profile_id")
-  private Profile toProfile;
+    @ManyToOne
+    @JoinColumn(name = "to_profile_id")
+    private Profile toProfile;
 
-  @Enumerated(EnumType.STRING)
-  private FriendStatus status = FriendStatus.PENDING;
+    @Enumerated(EnumType.STRING)
+    private FriendStatus status = FriendStatus.PENDING;
 
-  @Builder
-  public Friendship(Profile fromProfile, Profile toProfile) {
-    this.fromProfile = fromProfile;
-    this.toProfile = toProfile;
-  }
+    @Builder
+    public Friendship(
+        Profile fromProfile, Profile toProfile
+    ) {
+        this.fromProfile = fromProfile;
+        this.toProfile = toProfile;
+    }
 
-  public void changeStatus(FriendStatus newStatus) {
-    this.status = newStatus;
-  }
+    public void changeStatus(FriendStatus newStatus) {
+        this.status = newStatus;
+    }
 }

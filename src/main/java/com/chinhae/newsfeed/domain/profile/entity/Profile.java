@@ -48,17 +48,20 @@ public class Profile extends BaseEntity {
   @ColumnDefault("0")
   private Integer postsCount;
 
+  // TODO : account와 user 연결
   @ManyToOne
   @JoinColumn(name = "account_id")
-  private Account user;
+  private Account account;
 
+  // TODO : 로그인 구현시 id 제거
   @Builder
-  public Profile(String nickname, String profileImgUrl, String bio) {
+  public Profile(String nickname, String profileImgUrl, String bio, Account account) {
     this.nickname = getOrDefaultEmpty(nickname);
     this.profileImgUrl = getOrDefaultEmpty(profileImgUrl);
     this.bio = getOrDefaultEmpty(bio);
     this.friendsCount = 0;
     this.postsCount = 0;
+    this.account = account;
   }
 
   public void updateByForm(String nickname, String bio, String profileImgUrl) {

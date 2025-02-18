@@ -2,60 +2,55 @@ package com.chinhae.newsfeed.web.controller;
 
 import com.chinhae.newsfeed.domain.profile.dto.FriendRequest;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
+import com.chinhae.newsfeed.domain.profile.entity.constants.FriendStatus;
 import com.chinhae.newsfeed.domain.profile.service.FriendshipService;
 import com.chinhae.newsfeed.global.dto.Response;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/profiles/{profileId}")
+@RequestMapping("/api/profiles/")
 public class FriendshipController {
 
-  private final FriendshipService service;
+    private final FriendshipService service;
+    private final List<ProfileInfo> currentProfile; // TODO: to be deleted
 
-  @GetMapping("/friends")
-  public Response<List<ProfileInfo>> friends(@PathVariable("profileId") Long profileId) {
-    return Response.of(service.getFriends(profileId));
-  }
+    @GetMapping("/{profileId}/friends")
+    public Response<List<ProfileInfo>> friends(@PathVariable("profileId") Long profileId) {
+        return Response.of(service.getFriends(profileId));
+    }
 
-
-  @DeleteMapping("/friends/{friendId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void removeFriend(
-      @PathVariable("profileId") Long profileId,
-      @PathVariable("friendId") Long friendId
-  ) {
-
-  }
-
-  @GetMapping("/friend-requests")
-  public Response<List<FriendRequest>> friendRequests(@PathVariable("profileId") Long profileId) {
-    return Response.of(service.getFriendRequests(profileId));
-  }
+//    @DeleteMapping("/friends/{friendId}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void removeFriend(@PathVariable("friendId") Long friendId) {
 //
-//  @PostMapping("/friend-requests")
-//  public Response<FriendRequest> sendRequest(
-//      @PathVariable("profileId") Long profileId
-//  ) {
-//    return Response.of(service.sendRequest());
-//  }
-//
-//  @PatchMapping("/friend-requests/{requestId}")
-//  public void respondRequest(
-//      @PathVariable("profileId") Long profileId,
-//      @PathVariable("requestId") Long requestId,
-//      @RequestParam FriendStatus status
-//  ) {
-//
-//  }
+//    }
 
+    @GetMapping("/friend-requests")
+    public Response<List<FriendRequest>> friendRequests() {
+        return Response.of(service.getFriendRequests(currentProfile.get(0).getId()));
+    }
 
+    @PostMapping("/friend-requests/{friendId}")
+    public Response<FriendRequest> sendRequest(@PathVariable("friendId") Long friendId) {
+        return Response.of(service.sendRequest(currentProfile.get(0).getId(), friendId));
+    }
+
+    @PatchMapping("/friend-requests/{requestId}")
+    public void respondRequest(
+        @PathVariable("requestId") Long requestId,
+        @RequestParam("actions") FriendStatus status
+    ) {
+        service.respondRequest(requestId, status);
+    }
 }

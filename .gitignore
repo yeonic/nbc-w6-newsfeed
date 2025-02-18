@@ -41,3 +41,6 @@ out/
 
 ## spring properties
 application-*.yml
+
+**/temporary/
+**/import.sql
