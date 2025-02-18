@@ -1,5 +1,6 @@
 package com.chinhae.newsfeed.domain.account.service;
 
+import com.chinhae.newsfeed.domain.account.dto.Request.AccountDeleteRequestDto;
 import com.chinhae.newsfeed.domain.account.dto.Request.AccountLoginRequestDto;
 import com.chinhae.newsfeed.domain.account.dto.Request.AccountSignupRequestDto;
 import com.chinhae.newsfeed.domain.account.dto.Request.AccountUpdateRequestDto;
@@ -53,10 +54,14 @@ public class AccountService {
     }
 
     @Transactional
-    public void deleteUser(Long userId) { // 회원 탈퇴
-        accountRepository.findById(userId).orElseThrow(
+    public void deleteUser(Long userId, AccountDeleteRequestDto requestDto) { // 회원 탈퇴
+        Account account = accountRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException(LoginConst.DELETE_FAILED_MESSAGE)
         );
+
+        if (!passwordEncoder.matches(requestDto.getPassword(), account.getPassword())){
+            throw new IllegalArgumentException(LoginConst.DELETE_FAILED_MESSAGE);
+        }
 
         accountRepository.deleteById(userId);
     }
