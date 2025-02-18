@@ -9,6 +9,8 @@ import com.chinhae.newsfeed.domain.account.entity.Account;
 import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
 import com.chinhae.newsfeed.global.config.PasswordEncoder;
 import com.chinhae.newsfeed.global.messages.LoginConst;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +35,11 @@ public class AccountService {
     }
 
     @Transactional
-    public AccountLoginResponseDto loginUser(AccountLoginRequestDto requestDto) { // 로그인
+    public AccountLoginResponseDto loginUser(AccountLoginRequestDto requestDto, HttpServletRequest request) { // 로그인
+
+        HttpSession session = request.getSession();
+        session.setAttribute("LOGIN_USER", requestDto.getPassword());
+
         Account user = accountRepository.findByEmail(requestDto.getEmail()).orElseThrow(
                 () -> new IllegalArgumentException(LoginConst.LOGIN_FAILED_MESSAGE)
         );
