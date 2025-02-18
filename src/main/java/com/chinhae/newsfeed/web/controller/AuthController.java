@@ -24,9 +24,7 @@ public class AuthController {
 
     @PostMapping("/api/auth/login") // 로그인
     public Response<AccountLoginResponseDto> login(@RequestBody AccountLoginRequestDto requestDto, HttpServletRequest request){
-        AccountLoginResponseDto loginUser = accountService.loginUser(requestDto);
-        HttpSession session = request.getSession();
-        session.setAttribute("LOGIN_USER", loginUser);
+        AccountLoginResponseDto loginUser = accountService.loginUser(requestDto, request);
 
         return Response.of(loginUser);
     }
