@@ -21,6 +21,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "user")
 @SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE id = ?")
+@Where(clause = "is_deleted = 0")
 @NoArgsConstructor
 public class Account extends BaseEntity {
     @Id
