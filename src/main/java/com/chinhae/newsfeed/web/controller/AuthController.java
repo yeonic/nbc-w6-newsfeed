@@ -6,7 +6,6 @@ import com.chinhae.newsfeed.domain.account.dto.Response.AccountLoginResponseDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.AccountSignupResponsetDto;
 import com.chinhae.newsfeed.domain.account.service.AccountService;
 import com.chinhae.newsfeed.global.auth.Jwt;
-import com.chinhae.newsfeed.global.auth.JwtProvider;
 import com.chinhae.newsfeed.global.dto.Response;
 import com.chinhae.newsfeed.global.security.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
