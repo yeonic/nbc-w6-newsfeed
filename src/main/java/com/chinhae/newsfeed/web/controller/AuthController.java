@@ -5,8 +5,10 @@ import com.chinhae.newsfeed.domain.account.dto.Request.AccountSignupRequestDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.AccountLoginResponseDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.AccountSignupResponsetDto;
 import com.chinhae.newsfeed.domain.account.service.AccountService;
+import com.chinhae.newsfeed.global.auth.Jwt;
+import com.chinhae.newsfeed.global.auth.JwtProvider;
 import com.chinhae.newsfeed.global.dto.Response;
-import com.chinhae.newsfeed.global.messages.SessionKeyConst;
+import com.chinhae.newsfeed.global.security.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -22,13 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AccountService accountService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/api/auth/login") // 로그인
-    public Response<AccountLoginResponseDto> login(@RequestBody AccountLoginRequestDto requestDto, HttpSession session){
+    public Response<Jwt> login(@RequestBody AccountLoginRequestDto requestDto){
         AccountLoginResponseDto loginUser = accountService.loginUser(requestDto);
-        session.setAttribute(SessionKeyConst.SESSION_KEY, loginUser);
+        String token = jwtUtil.generateToken(loginUser.getEmail());
+        Jwt jwtDto = new Jwt(token);
 
-        return Response.of(loginUser);
+        return Response.of(jwtDto);
     }
 
     @PostMapping("/api/auth/logout") // 로그아웃
