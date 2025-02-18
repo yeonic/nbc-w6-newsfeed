@@ -22,7 +22,7 @@ public class AccountService {
     @Transactional
     public AccountSignupResponsetDto save(AccountSignupRequestDto requestDto) { // 회원가입
         if (accountRepository.existsByEmail(requestDto.getEmail())) {
-            throw new IllegalArgumentException(LoginConst.EMAIL_EXIST_MESSAGE);
+            throw new IllegalArgumentException(LoginConst.EMAIL_EXIST_MESSAGE); // 예외처리
         }
         String encodePassword = passwordEncoder.encode(requestDto.getPassword());
         Account user = new Account(requestDto.getEmail(), encodePassword, requestDto.getUsername(), requestDto.getBirthDate());
