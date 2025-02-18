@@ -2,10 +2,6 @@ spring:
   application:
     name: nbc-w6-newsfeed
 
-  jpa:
-    hibernate:
-      ddl-auto: create
-
 ---
 spring:
   profiles:
