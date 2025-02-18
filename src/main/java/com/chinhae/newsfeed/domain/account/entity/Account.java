@@ -1,6 +1,6 @@
 package com.chinhae.newsfeed.domain.account.entity;
 
-import com.chinhae.newsfeed.baseEntity.BaseEntity;
+import com.chinhae.newsfeed.domain.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
