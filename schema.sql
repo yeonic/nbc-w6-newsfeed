@@ -26,7 +26,7 @@ create table profiles
     updated_at      datetime default current_timestamp on update current_timestamp,
 
     primary key (id),
-    foreign key (account_id) references accounts (id)
+    constraint accounts_ibfk_1 foreign key (account_id) references accounts (id)
 );
 
 -- 게시글 테이블
@@ -54,23 +54,23 @@ create table comments
     updated_at datetime default current_timestamp on update current_timestamp,
 
     primary key (id),
-    foreign key (profile_id) references profiles (id),
-    foreign key (post_id) references posts (id)
+    constraint comments_ibfk_1 foreign key (profile_id) references profiles (id),
+    constraint comments_ibfk_2 foreign key (post_id) references posts (id)
 );
 
 
 -- 친구 관계 테이블
-create table friends
+create table friendships
 (
     id              bigint not null auto_increment,
     from_profile_id bigint not null,
     to_profile_id   bigint not null,
-    status          varchar(20) default 'pending',
+    status          varchar(20) default 'PENDING',
     created_at      datetime    default current_timestamp,
 
     primary key (id),
-    foreign key (from_profile_id) references profiles (id),
-    foreign key (to_profile_id) references profiles (id)
+    constraint friends_ibfk_1 foreign key (from_profile_id) references profiles (id),
+    constraint friends_ibfk_2 foreign key (to_profile_id) references profiles (id)
 
 );
 
@@ -82,6 +82,6 @@ create table post_likes
     post_id    bigint not null,
 
     primary key (id),
-    foreign key (profile_id) references profiles (id),
-    foreign key (post_id) references posts (id)
+    constraint post_likes_ibfk_1 foreign key (profile_id) references profiles (id),
+    constraint post_likes_ibfk_2 foreign key (post_id) references posts (id)
 );

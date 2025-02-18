@@ -36,7 +36,6 @@ public class Profile extends BaseEntity {
   private String nickname;
 
   @Lob
-  @Column
   private String profileImgUrl;
 
   @Size(max = 160)
@@ -44,11 +43,9 @@ public class Profile extends BaseEntity {
   private String bio;
 
   @ColumnDefault("0")
-  @Column
   private Integer friendsCount;
 
   @ColumnDefault("0")
-  @Column
   private Integer postsCount;
 
   @ManyToOne

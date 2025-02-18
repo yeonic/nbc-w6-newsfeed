@@ -6,12 +6,12 @@ import com.chinhae.newsfeed.domain.profile.dto.ProfileView;
 import com.chinhae.newsfeed.domain.profile.entity.Profile;
 import com.chinhae.newsfeed.domain.profile.repository.ProfileRepository;
 import com.chinhae.newsfeed.global.messages.ProfileConst;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-@Getter
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class ProfileService {
@@ -23,6 +23,9 @@ public class ProfileService {
     if (!StringUtils.hasText(form.getNickname())) {
       throw new IllegalArgumentException(ProfileConst.NICK_REQUIRED);
     }
+
+    // TODO: SessionAttribute를 통해 user를 받아서 넣어줘야 함.
+    // TODO: Default 이미지 처리
 
     Profile newProfile = Profile.builder()
         .nickname(form.getNickname())
