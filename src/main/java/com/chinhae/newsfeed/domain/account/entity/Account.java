@@ -4,12 +4,17 @@ import com.chinhae.newsfeed.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.With;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+import org.hibernate.annotations.processing.SQL;
 
 import java.time.LocalDate;
 
 @Getter
 @Entity
 @Table(name = "user")
+@SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE id = ?")
 @NoArgsConstructor
 public class Account extends BaseEntity {
     @Id
@@ -27,6 +32,9 @@ public class Account extends BaseEntity {
 
     @Column
     private LocalDate birthDate; // 생년월일
+
+    @Column(name = "is_deleted", columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean deleted;
 
     public Account(String email, String password, String username, LocalDate birthDate) {
         this.email = email;

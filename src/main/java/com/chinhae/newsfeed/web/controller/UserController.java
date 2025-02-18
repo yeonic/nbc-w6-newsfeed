@@ -1,5 +1,6 @@
 package com.chinhae.newsfeed.web.controller;
 
+import com.chinhae.newsfeed.domain.account.dto.Request.AccountDeleteRequestDto;
 import com.chinhae.newsfeed.domain.account.dto.Request.AccountUpdateRequestDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.AccountResponseDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.AccountUpdateFormResponse;
@@ -23,8 +24,8 @@ public class UserController {
     }
 
     @DeleteMapping("/api/users/{userId}") // 회원 탈퇴
-    public void deleteUser(@PathVariable Long userId){
-        accountService.deleteUser(userId);
+    public void deleteUser(@PathVariable Long userId, @RequestBody AccountDeleteRequestDto requestDto){
+        accountService.deleteUser(userId, requestDto);
     }
 
     @GetMapping("/api/users/{userId}/setting/account") // 계정 정보 수정 폼
