@@ -9,6 +9,7 @@ import com.chinhae.newsfeed.domain.account.entity.Account;
 import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
 import com.chinhae.newsfeed.global.config.PasswordEncoder;
 import com.chinhae.newsfeed.global.messages.LoginConst;
+import com.chinhae.newsfeed.global.messages.SessionKeyConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,7 @@ public class AccountService {
     }
 
     @Transactional
-    public AccountLoginResponseDto loginUser(AccountLoginRequestDto requestDto, HttpServletRequest request) { // 로그인
-
-        HttpSession session = request.getSession();
-        session.setAttribute("LOGIN_USER", requestDto.getPassword());
+    public AccountLoginResponseDto loginUser(AccountLoginRequestDto requestDto) { // 로그인
 
         Account user = accountRepository.findByEmail(requestDto.getEmail()).orElseThrow(
                 () -> new IllegalArgumentException(LoginConst.LOGIN_FAILED_MESSAGE)
@@ -47,7 +45,8 @@ public class AccountService {
             throw new IllegalArgumentException(LoginConst.LOGIN_FAILED_MESSAGE);
         }
 
-        return new AccountLoginResponseDto(user.getEmail(), user.getUsername(), user.getCreated_at());
+
+        return new AccountLoginResponseDto(user.getId(), user.getEmail(), user.getUsername(), user.getCreated_at());
     }
 
     @Transactional(readOnly = true)

@@ -6,6 +6,7 @@ import com.chinhae.newsfeed.domain.account.dto.Response.AccountLoginResponseDto;
 import com.chinhae.newsfeed.domain.account.dto.Response.AccountSignupResponsetDto;
 import com.chinhae.newsfeed.domain.account.service.AccountService;
 import com.chinhae.newsfeed.global.dto.Response;
+import com.chinhae.newsfeed.global.messages.SessionKeyConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -23,8 +24,9 @@ public class AuthController {
     private final AccountService accountService;
 
     @PostMapping("/api/auth/login") // 로그인
-    public Response<AccountLoginResponseDto> login(@RequestBody AccountLoginRequestDto requestDto, HttpServletRequest request){
-        AccountLoginResponseDto loginUser = accountService.loginUser(requestDto, request);
+    public Response<AccountLoginResponseDto> login(@RequestBody AccountLoginRequestDto requestDto, HttpSession session){
+        AccountLoginResponseDto loginUser = accountService.loginUser(requestDto);
+        session.setAttribute(SessionKeyConst.SESSION_KEY, loginUser);
 
         return Response.of(loginUser);
     }
