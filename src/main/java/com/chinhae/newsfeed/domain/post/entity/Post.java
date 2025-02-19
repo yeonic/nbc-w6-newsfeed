@@ -36,6 +36,7 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "profile_id", nullable = false)
     private Profile profile;
 
+
     public Post(Profile profile, String content) {
         this.profile = profile;
         this.content = content;

@@ -29,6 +29,7 @@ public class PostService {
                 () -> new IllegalArgumentException("잘못된 사용자 id입니다.")
         );
 
+
         Post post = new Post(profile, dto.getContent());
 
         Post savedPost = postRepository.save(post);
