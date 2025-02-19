@@ -2,6 +2,8 @@ package com.chinhae.newsfeed.domain.profile.service;
 
 import com.chinhae.newsfeed.domain.account.entity.Account;
 import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
+import com.chinhae.newsfeed.domain.account.entity.Account;
+import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileForm;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileView;
@@ -14,9 +16,10 @@ import java.util.Optional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-@Getter
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class ProfileService {

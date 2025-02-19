@@ -8,9 +8,9 @@ import com.chinhae.newsfeed.domain.profile.service.ProfileService;
 import com.chinhae.newsfeed.global.dto.Response;
 import com.chinhae.newsfeed.global.messages.SessionKeyConst;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -57,7 +57,7 @@ public class ProfileController {
     @PatchMapping("/{profileId}/settings")
     public Response<ProfileInfo> edit(
         @PathVariable(name = "profileId") Long profileId,
-        @RequestBody ProfileForm form
+        @Validated @RequestBody ProfileForm form
     ) {
         return Response.of(service.update(profileId, form));
     }
