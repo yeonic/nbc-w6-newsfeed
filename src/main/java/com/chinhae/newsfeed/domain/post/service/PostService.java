@@ -1,8 +1,6 @@
 package com.chinhae.newsfeed.domain.post.service;
 
 import com.chinhae.newsfeed.domain.base.dto.AuthorDto;
-import com.chinhae.newsfeed.domain.comment.dto.CommentCountDto;
-import com.chinhae.newsfeed.domain.comment.repository.CommentRepository;
 import com.chinhae.newsfeed.domain.post.dto.Request.PostRequestDto;
 import com.chinhae.newsfeed.domain.post.dto.Response.PostResponseDto;
 import com.chinhae.newsfeed.domain.post.entity.Post;
@@ -13,8 +11,6 @@ import com.chinhae.newsfeed.global.messages.PostConst;
 import com.chinhae.newsfeed.web.interceptor.exception.UnauthorizedException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +22,6 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final ProfileRepository profileRepository;
-    private final CommentRepository commentRepository;
 
 
     @Transactional
