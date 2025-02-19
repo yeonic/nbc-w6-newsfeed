@@ -12,11 +12,9 @@ import com.chinhae.newsfeed.global.messages.FriendConst;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -147,14 +145,6 @@ public class FriendshipService {
 
     private boolean isRequestRobbery(Long currentProfileId, Friendship friendship) {
         return !friendship.getToProfile().getId().equals(currentProfileId);
-    }
-
-    private boolean isBlocked(
-        Optional<Friendship> findFriendship,
-        Optional<Friendship> reversedFriendship
-    ) {
-        return isFriendShipStatus(findFriendship, FriendStatus.BLOCKED) ||
-            isFriendShipStatus(reversedFriendship, FriendStatus.BLOCKED);
     }
 
     private boolean isAlreadyPending(
