@@ -57,6 +57,11 @@ public class ProfileService {
 
     public ProfileView getProfile(Long profileId) {
         Profile findProfile = repository.findById(profileId).orElseThrow();
+
+        // count update
+        findProfile.updateFriendsCount(repository.countFriendsByProfileId(profileId));
+        findProfile.updatePostsCount(repository.countPostsByProfileId(profileId));
+
         return ProfileView.builder()
             .profile(ProfileInfo.of(findProfile))
             .posts(postService.findAllByProfileId(profileId))
