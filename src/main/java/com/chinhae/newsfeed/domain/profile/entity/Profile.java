@@ -68,4 +68,12 @@ public class Profile extends BaseEntity {
         this.bio = bio;
         this.profileImgUrl = profileImgUrl;
     }
+
+    public void updateFriendsCount(Integer newCount) {
+        this.friendsCount = newCount;
+    }
+
+    public void updatePostsCount(Integer newCount) {
+        this.postsCount = newCount;
+    }
 }

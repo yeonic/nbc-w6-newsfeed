@@ -8,7 +8,6 @@ import com.chinhae.newsfeed.global.dto.Response;
 import com.chinhae.newsfeed.global.messages.SessionKeyConst;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
-@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/profiles/")
@@ -56,12 +54,12 @@ public class FriendshipController {
         return Response.of(service.getFriendRequests(currentProfile.getId()));
     }
 
-    @PostMapping("/friend-requests/{friendId}")
+    @PostMapping("/friend-requests/{friendProfileId}")
     public Response<FriendRequest> sendRequest(
         @SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo currentProfile,
-        @PathVariable("friendId") Long friendId
+        @PathVariable("friendProfileId") Long friendProfileId
     ) {
-        return Response.of(service.sendRequest(currentProfile.getId(), friendId));
+        return Response.of(service.sendRequest(currentProfile.getId(), friendProfileId));
     }
 
     @PatchMapping("/friend-requests/{requestId}")
@@ -70,7 +68,6 @@ public class FriendshipController {
         @PathVariable("requestId") Long requestId,
         @RequestParam("actions") FriendStatus status
     ) {
-        log.info("input status = {}", status.toString());
         service.respondRequest(requestId, currentProfile.getId(), status);
     }
 }
