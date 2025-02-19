@@ -32,17 +32,12 @@ public class ProfileController {
 
     private final ProfileService service;
 
-    // TODO: 검색 기능 구현
-
     @PostMapping("/form")
     @ResponseStatus(HttpStatus.CREATED)
     public Response<ProfileInfo> addProfile(
-        @SessionAttribute(name = SessionKeyConst.ACCOUNT_KEY) Object account,
+        @SessionAttribute(name = SessionKeyConst.ACCOUNT_KEY) AccountResponseDto account,
         @RequestBody ProfileForm form) {
-
-        AccountResponseDto casted = (AccountResponseDto) account;
-        log.info("account = {}", casted.getEmail());
-        return Response.of(service.addProfile(casted.getId(), form));
+        return Response.of(service.addProfile(account.getId(), form));
     }
 
     @GetMapping("/{profileId}")
