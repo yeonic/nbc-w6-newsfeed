@@ -1,8 +1,8 @@
 package com.chinhae.newsfeed.domain.comment.service;
 
 import com.chinhae.newsfeed.domain.base.dto.AuthorDto;
-import com.chinhae.newsfeed.temporary.post.entity.Post;
-import com.chinhae.newsfeed.temporary.post.repository.PostRepository;
+import com.chinhae.newsfeed.domain.post.entity.Post;
+import com.chinhae.newsfeed.domain.post.repository.PostRepository;
 import com.chinhae.newsfeed.domain.profile.entity.Profile;
 import com.chinhae.newsfeed.domain.profile.repository.ProfileRepository;
 import com.chinhae.newsfeed.global.messages.CommentConst;
