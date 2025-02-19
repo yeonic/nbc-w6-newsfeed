@@ -1,4 +1,4 @@
-package com.chinhae.newsfeed.global.security;
+package com.chinhae.newsfeed.global.util;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
