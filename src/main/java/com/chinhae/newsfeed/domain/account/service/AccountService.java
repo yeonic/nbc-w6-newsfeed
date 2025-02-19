@@ -26,7 +26,7 @@ public class AccountService {
 
     @Transactional
     public AccountSignupResponsetDto save(AccountSignupRequestDto requestDto) { // 회원가입
-        if (accountRepository.existsByEmail(requestDto.getEmail())) {
+        if (accountRepository.existsByEmail(requestDto.getEmail()) > 0) {
             throw new IllegalArgumentException(LoginConst.EMAIL_EXIST_MESSAGE);
         }
         String encodePassword = passwordEncoder.encode(requestDto.getPassword());
