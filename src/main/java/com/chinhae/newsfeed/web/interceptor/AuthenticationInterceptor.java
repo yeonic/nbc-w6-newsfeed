@@ -2,7 +2,6 @@ package com.chinhae.newsfeed.web.interceptor;
 
 import com.chinhae.newsfeed.domain.account.dto.Response.AccountResponseDto;
 import com.chinhae.newsfeed.domain.account.service.AccountService;
-import com.chinhae.newsfeed.domain.profile.dto.ProfileForm;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
 import com.chinhae.newsfeed.domain.profile.service.ProfileService;
 import com.chinhae.newsfeed.global.messages.SessionKeyConst;
@@ -10,8 +9,7 @@ import com.chinhae.newsfeed.global.util.JwtUtil;
 import com.chinhae.newsfeed.web.interceptor.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Optional;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -47,34 +45,22 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             throw new UnauthorizedException(NOT_VALID_TOKEN);
         }
 
-        return setAccountAndProfile(request, response, token);
-    }
-
-    private boolean setAccountAndProfile(HttpServletRequest request, HttpServletResponse response,
-        String token) throws IOException {
-        AccountResponseDto accountByEmail = accountService
-            .findAccountByEmail(jwtUtil.extractEmail(token));
-        request.setAttribute(SessionKeyConst.ACCOUNT_KEY, accountByEmail);
-
-        Optional<ProfileInfo> defaultProfile = profileService.getDefaultProfile(
-            accountByEmail.getId());
-
-        if (defaultProfile.isEmpty()) {
-            ProfileInfo newProfile = createDefaultProfile(accountByEmail);
-            request.setAttribute(SessionKeyConst.PROFILE_KEY, newProfile);
-        }
-
-        request.setAttribute(SessionKeyConst.PROFILE_KEY, defaultProfile.orElseThrow());
+        setAccountAndProfile(request, token);
         return true;
     }
 
-    private ProfileInfo createDefaultProfile(AccountResponseDto accountByEmail) {
-        String tempName = accountByEmail.getEmail().split("@")[0];
-        return profileService.addProfile(accountByEmail.getId(), ProfileForm.builder()
-            .nickname(tempName)
-            .bio("")
-            .profileImgUrl("")
-            .build());
+    private void setAccountAndProfile(HttpServletRequest request, String token) {
+        AccountResponseDto accountByEmail = accountService
+            .findAccountByEmail(jwtUtil.extractEmail(token));
+
+        log.info("account = {}", accountByEmail.getEmail());
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionKeyConst.ACCOUNT_KEY, accountByEmail);
+
+        ProfileInfo defaultProfile = profileService.getDefaultProfile(
+            accountByEmail.getId()).orElseThrow();
+
+        session.setAttribute(SessionKeyConst.PROFILE_KEY, defaultProfile);
     }
 
     private boolean isTokenValid(String token) {

@@ -19,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
             .addPathPatterns("/**")
             .excludePathPatterns(
                 "/error", "/error-page/**",
-                "/api/auth/login", "/api/auth/signup", "/api/profiles/[0-9]+",
+                "/api/auth/login", "/api/auth/signup", "/api/profiles/{profileId:[0-9]+}",
                 "/api/posts", "/api/posts/{postId}", "/api/posts/{postId}/comments"
             );
     }
