@@ -1,9 +1,15 @@
 package com.chinhae.newsfeed.domain.post.entity;
 
-import com.chinhae.newsfeed.domain.account.entity.Account;
 import com.chinhae.newsfeed.domain.base.entity.BaseEntity;
 import com.chinhae.newsfeed.domain.profile.entity.Profile;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -14,7 +20,8 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor
 public class Post extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String content;
 
@@ -50,7 +57,11 @@ public class Post extends BaseEntity {
     }
 
     //조회수 카운트
-    public void UpdateViewCount (Integer viewCount) {
+    public void updateViewCount(Integer viewCount) {
         this.viewCount = viewCount + 1;
+    }
+
+    public void updateLikesCount(Integer likeCount) {
+        this.likeCount = likeCount;
     }
 }
