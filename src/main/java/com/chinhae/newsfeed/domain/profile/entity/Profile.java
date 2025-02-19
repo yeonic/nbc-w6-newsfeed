@@ -31,9 +31,9 @@ public class Profile extends BaseEntity {
     @Column(nullable = false)
     private Long id;
 
-    @Size(max = 8)
+    @Size(max = 32)
     @NotNull
-    @Column(nullable = false, length = 25)
+    @Column(nullable = false, length = 32, unique = true)
     private String nickname;
 
     @Lob
@@ -49,7 +49,6 @@ public class Profile extends BaseEntity {
     @ColumnDefault("0")
     private Integer postsCount;
 
-    // TODO : account와 user 연결
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;

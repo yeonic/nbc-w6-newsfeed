@@ -2,22 +2,18 @@ package com.chinhae.newsfeed.domain.profile.service;
 
 import com.chinhae.newsfeed.domain.account.entity.Account;
 import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
-import com.chinhae.newsfeed.domain.account.entity.Account;
-import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileForm;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileView;
 import com.chinhae.newsfeed.domain.profile.entity.Profile;
 import com.chinhae.newsfeed.domain.profile.repository.ProfileRepository;
-import com.chinhae.newsfeed.global.messages.ProfileConst;
+import com.chinhae.newsfeed.global.util.StringUtil;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 @Transactional
 @RequiredArgsConstructor
@@ -28,16 +24,13 @@ public class ProfileService {
     private final AccountRepository accountRepository;
 
     public ProfileInfo addProfile(Long accountId, ProfileForm form) {
-        if (!StringUtils.hasText(form.getNickname())) {
-            throw new IllegalArgumentException(ProfileConst.NICK_REQUIRED);
-        }
+        String processedNickName = form.getNickname() + "_" + StringUtil.getRandomString(12);
 
-        // TODO nickname이 존재하면 해시값 붙이기
         Account findAccount = accountRepository.findById(accountId).orElseThrow();
 
         Profile newProfile = Profile.builder()
             .account(findAccount)
-            .nickname(form.getNickname())
+            .nickname(processedNickName)
             .profileImgUrl(form.getProfileImgUrl())
             .bio(form.getBio())
             .build();

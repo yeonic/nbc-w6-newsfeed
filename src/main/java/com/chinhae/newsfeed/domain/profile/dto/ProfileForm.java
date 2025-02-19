@@ -4,6 +4,7 @@ import static com.chinhae.newsfeed.global.util.StringUtil.getOrDefaultEmpty;
 
 import com.chinhae.newsfeed.domain.profile.entity.Profile;
 import com.chinhae.newsfeed.global.messages.ProfileConst;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -15,11 +16,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProfileForm {
 
-    @Size(max = 8, message = ProfileConst.INVALID_LENGTH)
-    @Pattern(regexp = "^[a-zA-Z0-9._]+$", message = ProfileConst.WRONG_NICK_FORMAT)
+    @Size(max = 15, message = ProfileConst.INVALID_LENGTH)
+    @NotBlank(message = ProfileConst.NICK_REQUIRED)
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+$", message = ProfileConst.WRONG_NICK_FORMAT)
     private String nickname;
 
-    @Size(max = 8, message = ProfileConst.INVALID_LENGTH)
+    @Size(max = 50, message = ProfileConst.INVALID_LENGTH)
     private String bio;
 
     private String profileImgUrl;

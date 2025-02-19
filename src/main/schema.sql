@@ -16,7 +16,7 @@ create table account
 create table profile
 (
     id              bigint      not null auto_increment,
-    account_id      bigint      null,
+    account_id      bigint      not null,
     nickname        varchar(25) not null,
     profile_img_url text,
     bio             varchar(160),
