@@ -56,12 +56,12 @@ public class FriendshipController {
         return Response.of(service.getFriendRequests(currentProfile.getId()));
     }
 
-    @PostMapping("/friend-requests/{friendId}")
+    @PostMapping("/friend-requests/{friendProfileId}")
     public Response<FriendRequest> sendRequest(
         @SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo currentProfile,
-        @PathVariable("friendId") Long friendId
+        @PathVariable("friendProfileId") Long friendProfileId
     ) {
-        return Response.of(service.sendRequest(currentProfile.getId(), friendId));
+        return Response.of(service.sendRequest(currentProfile.getId(), friendProfileId));
     }
 
     @PatchMapping("/friend-requests/{requestId}")
