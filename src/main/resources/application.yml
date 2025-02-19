@@ -2,6 +2,10 @@ spring:
   application:
     name: nbc-w6-newsfeed
 
+jwt:
+  secret: "abcdefghijklmnopqrstuvwxyz123456"
+  expiration: 3600000
+
 ---
 spring:
   profiles:

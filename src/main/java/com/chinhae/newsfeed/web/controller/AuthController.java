@@ -7,7 +7,7 @@ import com.chinhae.newsfeed.domain.account.dto.Response.AccountSignupResponsetDt
 import com.chinhae.newsfeed.domain.account.service.AccountService;
 import com.chinhae.newsfeed.global.auth.Jwt;
 import com.chinhae.newsfeed.global.dto.Response;
-import com.chinhae.newsfeed.global.security.JwtUtil;
+import com.chinhae.newsfeed.global.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -26,7 +26,7 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/api/auth/login") // 로그인
-    public Response<Jwt> login(@RequestBody AccountLoginRequestDto requestDto){
+    public Response<Jwt> login(@RequestBody AccountLoginRequestDto requestDto) {
         AccountLoginResponseDto loginUser = accountService.loginUser(requestDto);
         String token = jwtUtil.generateToken(loginUser.getEmail());
         Jwt jwtDto = new Jwt(token);
@@ -36,15 +36,16 @@ public class AuthController {
 
     @PostMapping("/api/auth/logout") // 로그아웃
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void logout(HttpServletRequest request){
+    public void logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session != null){
+        if (session != null) {
             session.invalidate();
         }
     }
 
     @PostMapping("/api/auth/signup") // 회원가입
-    public Response<AccountSignupResponsetDto> signup(@Valid @RequestBody AccountSignupRequestDto requestDto){
+    public Response<AccountSignupResponsetDto> signup(
+        @Valid @RequestBody AccountSignupRequestDto requestDto) {
         AccountSignupResponsetDto save = accountService.save(requestDto);
 
         return Response.of(save);

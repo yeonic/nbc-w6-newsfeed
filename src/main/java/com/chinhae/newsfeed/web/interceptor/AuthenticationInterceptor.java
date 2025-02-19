@@ -1,6 +1,13 @@
 package com.chinhae.newsfeed.web.interceptor;
 
-import com.chinhae.newsfeed.global.security.JwtUtil;
+import com.chinhae.newsfeed.domain.account.dto.Response.AccountResponseDto;
+import com.chinhae.newsfeed.domain.account.service.AccountService;
+import com.chinhae.newsfeed.domain.profile.dto.ProfileForm;
+import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
+import com.chinhae.newsfeed.domain.profile.service.ProfileService;
+import com.chinhae.newsfeed.global.messages.SessionKeyConst;
+import com.chinhae.newsfeed.global.util.JwtUtil;
+import com.chinhae.newsfeed.web.interceptor.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
