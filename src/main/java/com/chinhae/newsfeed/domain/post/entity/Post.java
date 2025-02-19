@@ -57,4 +57,9 @@ public class Post extends BaseEntity {
     public void update(String content) {
         this.content = content;
     }
+
+    //조회수 카운트
+    public void UpdateViewCount (Integer viewCount) {
+        this.viewCount = viewCount + 1;
+    }
 }

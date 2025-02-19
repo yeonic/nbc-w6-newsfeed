@@ -1,10 +1,9 @@
 package com.chinhae.newsfeed.domain.comment.repository;
 
 import com.chinhae.newsfeed.domain.comment.entity.Comment;
+import java.util.List;
 import com.chinhae.newsfeed.domain.post.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
