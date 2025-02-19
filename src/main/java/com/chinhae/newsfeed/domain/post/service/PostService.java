@@ -70,6 +70,8 @@ public class PostService {
         AuthorDto author = new AuthorDto(post.getProfile().getId(),
             post.getProfile().getNickname(), post.getProfile().getProfileImgUrl());
 
+        post.UpdateViewCount(post.getViewCount());//조회수 count
+
         return new PostResponseDto(post.getId(), post.getContent(),
             author, post.getLikeCount(), post.getCommentCount(), post.getViewCount(),
             post.getCreated_at(), post.getUpdated_at());
