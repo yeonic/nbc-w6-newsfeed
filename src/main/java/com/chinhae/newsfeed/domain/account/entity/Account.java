@@ -1,13 +1,11 @@
 package com.chinhae.newsfeed.domain.account.entity;
 
-import com.chinhae.newsfeed.domain.base.BaseEntity;
+import com.chinhae.newsfeed.domain.base.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.With;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.hibernate.annotations.processing.SQL;
 
 import java.time.LocalDate;
 

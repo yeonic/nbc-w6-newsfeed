@@ -1,4 +1,4 @@
-package com.chinhae.newsfeed.domain.base;
+package com.chinhae.newsfeed.domain.base.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
