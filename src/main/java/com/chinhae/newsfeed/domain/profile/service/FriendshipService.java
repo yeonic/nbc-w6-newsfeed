@@ -25,14 +25,12 @@ public class FriendshipService {
     private final FriendshipRepository repository;
     private final ProfileRepository profileRepository;
 
-    public List<ProfileInfo> getFriends(Long profileId) {
+    public List<ProfileInfo> getFriends(Long profileId, FriendStatus status) {
         return repository
-            .findAllByProfileIdAndStatus(profileId, FriendStatus.APPROVED)
+            .findAllByProfileIdAndStatus(profileId, status)
             .stream()
             .map(friendship -> {
-                    Long friendId = profileId.equals(friendship.getFromProfile().getId())
-                        ? friendship.getToProfile().getId()
-                        : friendship.getFromProfile().getId();
+                    Long friendId = getFriendId(profileId, friendship);
 
                     return ProfileInfo.of(
                         profileRepository
@@ -45,14 +43,43 @@ public class FriendshipService {
     }
 
     // TODO : deleteFriend보다는 blockFriend가 자연스러움
-//    public void deleteFriend(Long currenProfileId, Long friendId) {
-//
-//    }
+    public void blockFriend(Long currenProfileId, Long friendProfileId) {
+        // 보내는 대상과 받는 대상이 같은지 확인
+        if (currenProfileId.equals(friendProfileId)) {
+            throw new IllegalFriendWorkException(FriendConst.REQUEST_BY_MYSELF);
+        }
+
+        Optional<Friendship> findFriendship = repository.findByFromProfileIdAndToProfileId(
+            currenProfileId,
+            friendProfileId);
+
+        findFriendship.ifPresentOrElse(
+            (friendship) -> friendship.changeStatus(FriendStatus.BLOCKED),
+            () -> {
+                Friendship blockRel = Friendship.builder()
+                    .fromProfile(profileRepository.findById(currenProfileId).orElseThrow())
+                    .toProfile(profileRepository.findById(friendProfileId).orElseThrow())
+                    .build();
+
+                // 탈퇴한 회원인지 확인
+                if (isDeletedProfile(blockRel.getFromProfile(), blockRel.getToProfile())) {
+                    throw new IllegalFriendWorkException(FriendConst.REQUEST_TO_NOBODY);
+                }
+
+                blockRel.changeStatus(FriendStatus.BLOCKED);
+                repository.save(blockRel);
+            });
+    }
 
     public List<FriendRequest> getFriendRequests(Long profileId) {
         return repository
             .findAllByToProfileIdAndStatus(profileId, FriendStatus.PENDING)
             .stream()
+            .filter(friendship -> {
+                Optional<Friendship> reversedFriendShip = repository.findByFromProfileIdAndToProfileId(
+                    friendship.getToProfile().getId(), friendship.getFromProfile().getId());
+                return !isFriendShipStatus(reversedFriendShip, FriendStatus.BLOCKED);
+            })
             .map(FriendRequest::of)
             .toList();
     }
@@ -111,8 +138,24 @@ public class FriendshipService {
         friendship.changeStatus(status);
     }
 
+
+    private Long getFriendId(Long profileId, Friendship friendship) {
+        return profileId.equals(friendship.getFromProfile().getId())
+            ? friendship.getToProfile().getId()
+            : friendship.getFromProfile().getId();
+    }
+
+
     private boolean isRequestRobbery(Long currentProfileId, Friendship friendship) {
         return !friendship.getToProfile().getId().equals(currentProfileId);
+    }
+
+    private boolean isBlocked(
+        Optional<Friendship> findFriendship,
+        Optional<Friendship> reversedFriendship
+    ) {
+        return isFriendShipStatus(findFriendship, FriendStatus.BLOCKED) ||
+            isFriendShipStatus(reversedFriendship, FriendStatus.BLOCKED);
     }
 
     private boolean isAlreadyPending(

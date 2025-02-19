@@ -9,12 +9,14 @@ import com.chinhae.newsfeed.global.messages.SessionKeyConst;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
@@ -28,14 +30,24 @@ public class FriendshipController {
 
     @GetMapping("/{profileId}/friends")
     public Response<List<ProfileInfo>> friends(@PathVariable("profileId") Long profileId) {
-        return Response.of(service.getFriends(profileId));
+        return Response.of(service.getFriends(profileId, FriendStatus.APPROVED));
     }
 
-//    @DeleteMapping("/friends/{friendId}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void removeFriend(@PathVariable("friendId") Long friendId) {
-//
-//    }
+    @GetMapping("/blocked-friends")
+    public Response<List<ProfileInfo>> blockedFriends(
+        @SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo currentProfile
+    ) {
+        return Response.of(service.getFriends(currentProfile.getId(), FriendStatus.BLOCKED));
+    }
+
+    @PostMapping("/blocked-friends/{friendProfileId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void blockFriend(
+        @SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo currentProfile,
+        @PathVariable("friendProfileId") Long friendProfileId
+    ) {
+        service.blockFriend(currentProfile.getId(), friendProfileId);
+    }
 
     @GetMapping("/friend-requests")
     public Response<List<FriendRequest>> friendRequests(
