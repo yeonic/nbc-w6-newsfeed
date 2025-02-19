@@ -18,7 +18,8 @@ public class PostController {
 
     @PostMapping("/api/posts")//게시글 생성
     public Response<PostResponseDto> save (@RequestBody PostRequestDto dto) {
-        //Profile profile = new Profile("김덕구", "com", "안녕하세요");
+        //@SessionAttribute(name = "profileId", required = false) Long profileId
+
         return Response.of(postService.save(dto, 1L));
     }
 

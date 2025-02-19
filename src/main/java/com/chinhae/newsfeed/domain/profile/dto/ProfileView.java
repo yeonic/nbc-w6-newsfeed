@@ -17,4 +17,6 @@ public class ProfileView {
   public ProfileView(ProfileInfo profile) {
     this.profile = profile;
   }
+
+
 }

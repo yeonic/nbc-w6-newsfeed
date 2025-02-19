@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProfileInfo {
 
+  private Long id;
   private String nickname;
   private String profileImgUrl;
   private String bio;
@@ -23,8 +24,9 @@ public class ProfileInfo {
   private LocalDateTime updatedAt;
 
   @Builder
-  public ProfileInfo(String nickname, String profileImgUrl, String bio, int friendsCount,
+  public ProfileInfo(Long id, String nickname, String profileImgUrl, String bio, int friendsCount,
       int postsCount, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    this.id = id;
     this.nickname = nickname;
     this.profileImgUrl = profileImgUrl;
     this.bio = bio;
@@ -34,8 +36,10 @@ public class ProfileInfo {
     this.updatedAt = updatedAt;
   }
 
+
   public static ProfileInfo of(Profile profile) {
     return ProfileInfo.builder()
+        .id(profile.getId())
         .nickname(profile.getNickname())
         .profileImgUrl(profile.getProfileImgUrl())
         .bio(profile.getBio())
