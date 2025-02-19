@@ -34,8 +34,8 @@ public class PostService {
 
         Post savedPost = postRepository.save(post);
         //AuthorDto 객체 생성...
-        AuthorDto author = new AuthorDto( savedPost.getProfile().getId(),
-                savedPost.getProfile().getNickname(),savedPost.getProfile().getProfileImgUrl());
+        AuthorDto author = new AuthorDto( profile.getId(),
+                profile.getNickname(), profile.getProfileImgUrl());
 
 
 
