@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 public class CommentRequestDto {
 
-    @NotBlank(message = CommentConst.COMMENT_REQUIRED)
+    @NotBlank(message = CommentConst.CONTENT_REQUIRED)
     private String content;
 }
