@@ -25,48 +25,48 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 public class Profile extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(nullable = false)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
+    private Long id;
 
-  @Size(max = 25)
-  @NotNull
-  @Column(nullable = false, length = 25)
-  private String nickname;
+    @Size(max = 8)
+    @NotNull
+    @Column(nullable = false, length = 25)
+    private String nickname;
 
-  @Lob
-  private String profileImgUrl;
+    @Lob
+    private String profileImgUrl;
 
-  @Size(max = 160)
-  @Column(length = 160)
-  private String bio;
+    @Size(max = 50)
+    @Column(length = 160)
+    private String bio;
 
-  @ColumnDefault("0")
-  private Integer friendsCount;
+    @ColumnDefault("0")
+    private Integer friendsCount;
 
-  @ColumnDefault("0")
-  private Integer postsCount;
+    @ColumnDefault("0")
+    private Integer postsCount;
 
-  // TODO : account와 user 연결
-  @ManyToOne
-  @JoinColumn(name = "account_id")
-  private Account account;
+    // TODO : account와 user 연결
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
 
-  // TODO : 로그인 구현시 id 제거
-  @Builder
-  public Profile(String nickname, String profileImgUrl, String bio, Account account) {
-    this.nickname = getOrDefaultEmpty(nickname);
-    this.profileImgUrl = getOrDefaultEmpty(profileImgUrl);
-    this.bio = getOrDefaultEmpty(bio);
-    this.friendsCount = 0;
-    this.postsCount = 0;
-    this.account = account;
-  }
+    // TODO : 로그인 구현시 id 제거
+    @Builder
+    public Profile(String nickname, String profileImgUrl, String bio, Account account) {
+        this.nickname = getOrDefaultEmpty(nickname);
+        this.profileImgUrl = getOrDefaultEmpty(profileImgUrl);
+        this.bio = getOrDefaultEmpty(bio);
+        this.friendsCount = 0;
+        this.postsCount = 0;
+        this.account = account;
+    }
 
-  public void updateByForm(String nickname, String bio, String profileImgUrl) {
-    this.nickname = nickname;
-    this.bio = bio;
-    this.profileImgUrl = profileImgUrl;
-  }
+    public void updateByForm(String nickname, String bio, String profileImgUrl) {
+        this.nickname = nickname;
+        this.bio = bio;
+        this.profileImgUrl = profileImgUrl;
+    }
 }
