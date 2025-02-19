@@ -11,8 +11,12 @@ import com.chinhae.newsfeed.domain.account.dto.Response.AccountUpdateFormRespons
 import com.chinhae.newsfeed.domain.account.dto.Response.AccountUpdateResponseDto;
 import com.chinhae.newsfeed.domain.account.entity.Account;
 import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
+import com.chinhae.newsfeed.domain.profile.dto.ProfileForm;
+import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
+import com.chinhae.newsfeed.domain.profile.service.ProfileService;
 import com.chinhae.newsfeed.global.config.PasswordEncoder;
 import com.chinhae.newsfeed.global.messages.LoginConst;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,11 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    private final ProfileService profileService;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public AccountSignupResponsetDto save(AccountSignupRequestDto requestDto) { // 회원가입
-        if (accountRepository.existsByEmail(requestDto.getEmail())) {
+        if (accountRepository.existsByEmail(requestDto.getEmail()) > 0) {
             throw new IllegalArgumentException(LoginConst.EMAIL_EXIST_MESSAGE);
         }
         String encodePassword = passwordEncoder.encode(requestDto.getPassword());
@@ -46,6 +51,11 @@ public class AccountService {
         );
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException(LoginConst.LOGIN_FAILED_MESSAGE);
+        }
+
+        Optional<ProfileInfo> defaultProfile = profileService.getDefaultProfile(user.getId());
+        if (defaultProfile.isEmpty()) {
+            createDefaultProfile(user.getId(), user.getEmail());
         }
 
         return new AccountLoginResponseDto(user.getId(), user.getEmail(), user.getUsername(),
@@ -102,5 +112,14 @@ public class AccountService {
 
         return new AccountUpdateResponseDto(user.getEmail(), user.getUsername(),
             user.getCreated_at(), user.getUpdated_at());
+    }
+
+    private void createDefaultProfile(Long accountId, String email) {
+        String tempName = email.split("@")[0];
+        profileService.addProfile(accountId, ProfileForm.builder()
+            .nickname(tempName)
+            .bio("")
+            .profileImgUrl("")
+            .build());
     }
 }

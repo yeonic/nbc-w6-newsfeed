@@ -7,7 +7,6 @@ import com.chinhae.newsfeed.domain.profile.dto.ProfileView;
 import com.chinhae.newsfeed.domain.profile.service.ProfileService;
 import com.chinhae.newsfeed.global.dto.Response;
 import com.chinhae.newsfeed.global.messages.SessionKeyConst;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @Transactional
@@ -36,9 +36,12 @@ public class ProfileController {
     @PostMapping("/form")
     @ResponseStatus(HttpStatus.CREATED)
     public Response<ProfileInfo> addProfile(
-        @SessionAttribute(name = SessionKeyConst.ACCOUNT_KEY) AccountResponseDto account,
-        @RequestBody ProfileForm form, HttpServletRequest request) {
-        return Response.of(service.addProfile(account.getId(), form));
+        @SessionAttribute(name = SessionKeyConst.ACCOUNT_KEY) Object account,
+        @RequestBody ProfileForm form) {
+
+        AccountResponseDto casted = (AccountResponseDto) account;
+        log.info("account = {}", casted.getEmail());
+        return Response.of(service.addProfile(casted.getId(), form));
     }
 
     @GetMapping("/{profileId}")
