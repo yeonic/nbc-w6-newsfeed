@@ -1,8 +1,6 @@
 package com.chinhae.newsfeed.domain.post.service;
 
 import com.chinhae.newsfeed.domain.base.dto.AuthorDto;
-import com.chinhae.newsfeed.domain.comment.dto.CommentCountDto;
-import com.chinhae.newsfeed.domain.comment.repository.CommentRepository;
 import com.chinhae.newsfeed.domain.post.dto.Request.PostRequestDto;
 import com.chinhae.newsfeed.domain.post.dto.Response.PostResponseDto;
 import com.chinhae.newsfeed.domain.post.entity.Post;
@@ -13,8 +11,6 @@ import com.chinhae.newsfeed.global.messages.PostConst;
 import com.chinhae.newsfeed.web.interceptor.exception.UnauthorizedException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +22,6 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final ProfileRepository profileRepository;
-    private final CommentRepository commentRepository;
 
 
     @Transactional
@@ -54,22 +49,13 @@ public class PostService {
 
         List<PostResponseDto> dtos = new ArrayList<>();
 
-        List<Long> postIds = posts.stream()
-                .map(Post::getId)
-                .toList();
-
-        List<CommentCountDto> countResults = commentRepository.countByPostIds(postIds);
-
-        Map<Long, Long> commentCountMap = countResults.stream()
-                .collect(Collectors.toMap(CommentCountDto::getPostId, CommentCountDto::getCount));
-
         for (Post post : posts) {
             //AuthorDto 객체 생성...
             AuthorDto author = new AuthorDto(post.getProfile().getId(),
                 post.getProfile().getNickname(), post.getProfile().getProfileImgUrl());
 
             PostResponseDto dto = new PostResponseDto(post.getId(), post.getContent(),
-                author, post.getLikeCount(), commentCountMap.get(post.getId()).intValue(), post.getViewCount(),
+                author, post.getLikeCount(), post.getCommentCount(), post.getViewCount(),
                 post.getCreated_at(), post.getUpdated_at());
             dtos.add(dto);
         }
@@ -83,14 +69,12 @@ public class PostService {
             () -> new IllegalArgumentException("해당 id를 조회할 수 없습니다.")
         );
 
-        Long commentCount = commentRepository.countCommentByPost_Id(post.getId());
-
         //AuthorDto 객체 생성...
         AuthorDto author = new AuthorDto(post.getProfile().getId(),
             post.getProfile().getNickname(), post.getProfile().getProfileImgUrl());
 
         return new PostResponseDto(post.getId(), post.getContent(),
-            author, post.getLikeCount(), commentCount.intValue(), post.getViewCount(),
+            author, post.getLikeCount(), post.getCommentCount(), post.getViewCount(),
             post.getCreated_at(), post.getUpdated_at());
     }
 
@@ -112,14 +96,12 @@ public class PostService {
 
         post.update(dto.getContent());
 
-        Long commentCount = commentRepository.countCommentByPost_Id(post.getId());
-
         //AuthorDto 객체 생성...
         AuthorDto author = new AuthorDto(post.getProfile().getId(),
             post.getProfile().getNickname(), post.getProfile().getProfileImgUrl());
 
         return new PostResponseDto(post.getId(), post.getContent(),
-            author, post.getLikeCount(), commentCount.intValue(), post.getViewCount(),
+            author, post.getLikeCount(), post.getCommentCount(), post.getViewCount(),
             post.getCreated_at(), post.getUpdated_at());
     }
 

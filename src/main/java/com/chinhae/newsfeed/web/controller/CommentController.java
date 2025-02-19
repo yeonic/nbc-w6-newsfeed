@@ -58,10 +58,11 @@ public class CommentController {
     @DeleteMapping("/api/posts/{postId}/comments/{commentId}") // 댓글 삭제
     public Response<String> delete (
             @SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo profile,
+            @PathVariable Long postId,
             @PathVariable Long commentId
     ){
         Long profileId = profile.getId();
-        commentService.deleteComment(profileId, commentId);
+        commentService.deleteComment(profileId, postId, commentId);
         return Response.of("댓글이 삭제되었습니다.");
     }
 }

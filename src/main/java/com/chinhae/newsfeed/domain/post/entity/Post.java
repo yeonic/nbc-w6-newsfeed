@@ -1,6 +1,5 @@
 package com.chinhae.newsfeed.domain.post.entity;
 
-import com.chinhae.newsfeed.domain.account.entity.Account;
 import com.chinhae.newsfeed.domain.base.entity.BaseEntity;
 import com.chinhae.newsfeed.domain.profile.entity.Profile;
 import jakarta.persistence.*;
@@ -43,6 +42,16 @@ public class Post extends BaseEntity {
         this.viewCount = 0;
         this.commentCount = 0;
         this.likeCount = 0;
+    }
+
+    public void incrementCommentCount() {
+        commentCount++;
+    }
+
+    public void decrementCommentCount() {
+        if (this.commentCount > 0) {
+            this.commentCount--;
+        }
     }
 
     public void update(String content) {
