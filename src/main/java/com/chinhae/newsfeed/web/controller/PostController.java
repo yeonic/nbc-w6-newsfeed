@@ -1,4 +1,4 @@
-package com.chinhae.newsfeed.domain.post.controller;
+package com.chinhae.newsfeed.web.controller;
 
 import com.chinhae.newsfeed.domain.post.dto.Request.PostRequestDto;
 import com.chinhae.newsfeed.domain.post.dto.Response.PostResponseDto;
@@ -42,13 +42,14 @@ public class PostController {
 
     @PatchMapping("/api/posts/{id}")
     public Response<PostResponseDto> update(@PathVariable Long id,
-        @RequestBody PostRequestDto dto,@SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo profile) {
+        @RequestBody PostRequestDto dto,
+        @SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo profile) {
         return Response.of(postService.update(id, dto, profile.getId()));
     }
 
     @DeleteMapping("/api/posts/{id}")
     public void delete(@PathVariable Long id,
-                       @SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo profile) {
+        @SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo profile) {
         postService.deleteById(id, profile.getId());
     }
 
