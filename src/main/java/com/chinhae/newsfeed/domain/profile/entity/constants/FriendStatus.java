@@ -6,4 +6,8 @@ public enum FriendStatus {
     public static boolean isInvalidResponse(FriendStatus status) {
         return status != APPROVED && status != DECLINED;
     }
+
+    public static boolean isPending(FriendStatus status) {
+        return status == PENDING;
+    }
 }

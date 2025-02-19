@@ -5,6 +5,7 @@ import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
 import com.chinhae.newsfeed.domain.profile.entity.constants.FriendStatus;
 import com.chinhae.newsfeed.domain.profile.service.FriendshipService;
 import com.chinhae.newsfeed.global.dto.Response;
+import com.chinhae.newsfeed.global.messages.SessionKeyConst;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class FriendshipController {
 
     private final FriendshipService service;
-    private final List<ProfileInfo> currentProfile; // TODO: to be deleted
 
     @GetMapping("/{profileId}/friends")
     public Response<List<ProfileInfo>> friends(@PathVariable("profileId") Long profileId) {
@@ -37,20 +38,27 @@ public class FriendshipController {
 //    }
 
     @GetMapping("/friend-requests")
-    public Response<List<FriendRequest>> friendRequests() {
-        return Response.of(service.getFriendRequests(currentProfile.get(0).getId()));
+    public Response<List<FriendRequest>> friendRequests(
+        @SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo currentProfile
+    ) {
+        return Response.of(service.getFriendRequests(currentProfile.getId()));
     }
 
     @PostMapping("/friend-requests/{friendId}")
-    public Response<FriendRequest> sendRequest(@PathVariable("friendId") Long friendId) {
-        return Response.of(service.sendRequest(currentProfile.get(0).getId(), friendId));
+    public Response<FriendRequest> sendRequest(
+        @SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo currentProfile,
+        @PathVariable("friendId") Long friendId
+    ) {
+        return Response.of(service.sendRequest(currentProfile.getId(), friendId));
     }
 
     @PatchMapping("/friend-requests/{requestId}")
     public void respondRequest(
+        @SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo currentProfile,
         @PathVariable("requestId") Long requestId,
         @RequestParam("actions") FriendStatus status
     ) {
-        service.respondRequest(requestId, status);
+        log.info("input status = {}", status.toString());
+        service.respondRequest(requestId, currentProfile.getId(), status);
     }
 }
