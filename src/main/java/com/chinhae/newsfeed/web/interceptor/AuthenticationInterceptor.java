@@ -1,6 +1,5 @@
-package com.chinhae.newsfeed.global.config;
+package com.chinhae.newsfeed.web.interceptor;
 
-import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
 import com.chinhae.newsfeed.global.security.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,7 +15,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String token = request.getHeader("Authoriztion");
+        String token = request.getHeader("Authorization");
 
         if (token == null || !token.startsWith("Bearer ")){
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -24,9 +23,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        token = token.substring(7);
+        token = token.substring(7); // 앞에서 7자리를 잘라내겠다., //jwt가 bearer 타입, 불필요한 문자열을 잘라서 사용하겠다.
 
-        if (!jwtUtil.validateToken(token)){
+        if (!jwtUtil.validateToken(token)){ //
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("유효하지 않거나 만료된 토큰");
             return false;
