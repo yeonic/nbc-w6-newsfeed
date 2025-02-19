@@ -21,7 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
                 "/error", "/error-page/**",
                 "/api/auth/login", "/api/auth/signup",
                 "/api/profiles/{profileId:[0-9]+}", "/api/profiles/{profileId:[0-9]+}/friends",
-                "/api/posts", "/api/posts/{postId}", "/api/posts/{postId}/comments"
+                "/api/posts", "/api/posts/{postId:[0-9]+}", "/api/posts/{postId:[0-9]+}/comments"
             );
     }
 }

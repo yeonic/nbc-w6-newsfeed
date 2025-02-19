@@ -42,7 +42,6 @@ public class FriendshipService {
             .toList();
     }
 
-    // TODO : deleteFriend보다는 blockFriend가 자연스러움
     public void blockFriend(Long currenProfileId, Long friendProfileId) {
         // 보내는 대상과 받는 대상이 같은지 확인
         if (currenProfileId.equals(friendProfileId)) {

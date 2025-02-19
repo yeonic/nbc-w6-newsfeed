@@ -32,8 +32,6 @@ public class ProfileController {
 
     private final ProfileService service;
 
-    // TODO: 검색 기능 구현
-
     @PostMapping("/form")
     @ResponseStatus(HttpStatus.CREATED)
     public Response<ProfileInfo> addProfile(

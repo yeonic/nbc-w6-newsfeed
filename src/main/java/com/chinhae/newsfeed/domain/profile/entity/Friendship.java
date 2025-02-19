@@ -1,6 +1,6 @@
 package com.chinhae.newsfeed.domain.profile.entity;
 
-import com.chinhae.newsfeed.domain.base.BaseEntity;
+import com.chinhae.newsfeed.domain.base.entity.BaseEntity;
 import com.chinhae.newsfeed.domain.profile.entity.constants.FriendStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
