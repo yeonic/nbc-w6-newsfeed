@@ -42,13 +42,14 @@ public class PostController {
 
     @PatchMapping("/api/posts/{id}")
     public Response<PostResponseDto> update(@PathVariable Long id,
-        @RequestBody PostRequestDto dto) {
-        return Response.of(postService.update(id, dto));
+        @RequestBody PostRequestDto dto,@SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo profile) {
+        return Response.of(postService.update(id, dto, profile.getId()));
     }
 
     @DeleteMapping("/api/posts/{id}")
-    public void delete(@PathVariable Long id) {
-        postService.deleteById(id);
+    public void delete(@PathVariable Long id,
+                       @SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo profile) {
+        postService.deleteById(id, profile.getId());
     }
 
 

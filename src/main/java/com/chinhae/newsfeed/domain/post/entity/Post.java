@@ -40,6 +40,9 @@ public class Post extends BaseEntity {
     public Post(Profile profile, String content) {
         this.profile = profile;
         this.content = content;
+        this.viewCount = 0;
+        this.commentCount = 0;
+        this.likeCount = 0;
     }
 
     public void update(String content) {

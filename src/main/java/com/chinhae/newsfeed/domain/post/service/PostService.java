@@ -7,6 +7,9 @@ import com.chinhae.newsfeed.domain.post.entity.Post;
 import com.chinhae.newsfeed.domain.post.repository.PostRepository;
 import com.chinhae.newsfeed.domain.profile.entity.Profile;
 import com.chinhae.newsfeed.domain.profile.repository.ProfileRepository;
+import com.chinhae.newsfeed.domain.profile.service.ProfileService;
+import com.chinhae.newsfeed.global.messages.PostConst;
+import com.chinhae.newsfeed.web.interceptor.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,10 +81,13 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponseDto update(Long id, PostRequestDto dto) {
+    public PostResponseDto update(Long id, PostRequestDto dto, Long profileId) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 id를 조회할 수 없습니다.")
         );
+        if (!post.getProfile().getId().equals(profileId)) {
+            throw new UnauthorizedException(PostConst.BAD_ACCESS);
+        }
 
         post.update(dto.getContent());
 
@@ -95,9 +101,13 @@ public class PostService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
-        if (!postRepository.existsById(id)) {
-            throw new IllegalArgumentException("해당 id가 존재하지 않아 삭제가 불가능 합니다.");
+    public void deleteById(Long id,Long profileId) {
+        Post post = postRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 id가 존재하지 않아 삭제가 불가능 합니다.")
+        );
+
+        if (!post.getProfile().getId().equals(profileId)) {
+            throw new UnauthorizedException(PostConst.BAD_ACCESS);
         }
         postRepository.deleteById(id);
     }
