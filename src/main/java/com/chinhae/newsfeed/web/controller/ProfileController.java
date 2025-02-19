@@ -8,6 +8,7 @@ import com.chinhae.newsfeed.domain.profile.service.ProfileService;
 import com.chinhae.newsfeed.global.dto.Response;
 import com.chinhae.newsfeed.global.messages.SessionKeyConst;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
