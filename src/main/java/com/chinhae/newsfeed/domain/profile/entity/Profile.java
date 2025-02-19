@@ -3,7 +3,7 @@ package com.chinhae.newsfeed.domain.profile.entity;
 import static com.chinhae.newsfeed.global.util.StringUtil.getOrDefaultEmpty;
 
 import com.chinhae.newsfeed.domain.account.entity.Account;
-import com.chinhae.newsfeed.domain.base.BaseEntity;
+import com.chinhae.newsfeed.domain.base.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

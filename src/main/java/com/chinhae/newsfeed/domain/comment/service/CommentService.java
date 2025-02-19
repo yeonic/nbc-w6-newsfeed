@@ -1,5 +1,8 @@
 package com.chinhae.newsfeed.domain.comment.service;
 
+import com.chinhae.newsfeed.domain.base.dto.AuthorDto;
+import com.chinhae.newsfeed.temporary.post.entity.Post;
+import com.chinhae.newsfeed.temporary.post.repository.PostRepository;
 import com.chinhae.newsfeed.domain.profile.entity.Profile;
 import com.chinhae.newsfeed.domain.profile.repository.ProfileRepository;
 import com.chinhae.newsfeed.global.messages.CommentConst;
@@ -8,14 +11,12 @@ import com.chinhae.newsfeed.domain.comment.dto.reponse.CommentResponseDto;
 import com.chinhae.newsfeed.domain.comment.dto.request.CommentRequestDto;
 import com.chinhae.newsfeed.domain.comment.entity.Comment;
 import com.chinhae.newsfeed.domain.comment.repository.CommentRepository;
-import com.chinhae.newsfeed.none.post.entity.Post;
-import com.chinhae.newsfeed.none.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,10 +39,10 @@ public class CommentService {
 
         commentRepository.save(comment);
 
+        AuthorDto authorDto = new AuthorDto(profile.getId(), profile.getNickname(), profile.getProfileImgUrl());
+
         return new CommentResponseDto(
-                profile.getId(),
-                profile.getNickname(),
-                profile.getProfileImgUrl(),
+                authorDto,
                 comment.getContent(),
                 comment.getCreated_at(),
                 comment.getUpdated_at()
@@ -53,15 +54,24 @@ public class CommentService {
 
         List<Comment> comments = commentRepository.findByPost_Id(postId);
 
-        return comments.stream()
-                .map(comment -> new CommentResponseDto(
-                        comment.getProfile().getId(),
-                        comment.getProfile().getNickname(),
-                        comment.getProfile().getProfileImgUrl(),
-                        comment.getContent(),
-                        comment.getCreated_at(),
-                        comment.getUpdated_at()))
-                .collect(Collectors.toList());
+        List<CommentResponseDto> dtos = new ArrayList<>();
+
+        for (Comment comment : comments) {
+            AuthorDto authorDto = new AuthorDto(
+                    comment.getProfile().getId(),
+                    comment.getProfile().getNickname(),
+                    comment.getProfile().getProfileImgUrl()
+            );
+
+            CommentResponseDto responseDto = new CommentResponseDto(authorDto,
+                    comment.getContent(),
+                    comment.getCreated_at(),
+                    comment.getUpdated_at()
+            );
+            dtos.add(responseDto);
+        }
+
+        return dtos;
     }
 
     @Transactional
@@ -85,12 +95,15 @@ public class CommentService {
             throw new IllegalArgumentException(CommentConst.PROFILE_NOT_MATCH);
         }
 
+        Profile profile = profileRepository.findById(profileId)
+                .orElseThrow(() -> new IllegalArgumentException(CommentConst.PROFILE_NOT_MATCH));
+
+        AuthorDto authorDto = new AuthorDto(profile.getId(), profile.getNickname(), profile.getProfileImgUrl());
+
         comment.update(requestDto.getContent());
 
         return new CommentResponseDto(
-                comment.getProfile().getId(),
-                comment.getProfile().getNickname(),
-                comment.getProfile().getProfileImgUrl(),
+                authorDto,
                 comment.getContent(),
                 comment.getCreated_at(),
                 comment.getUpdated_at()
