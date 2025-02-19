@@ -2,6 +2,7 @@ package com.chinhae.newsfeed.web.controller;
 
 import com.chinhae.newsfeed.domain.post.dto.Request.PostRequestDto;
 import com.chinhae.newsfeed.domain.post.dto.Response.PostResponseDto;
+import com.chinhae.newsfeed.domain.post.dto.Response.PostView;
 import com.chinhae.newsfeed.domain.post.service.PostService;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
 import com.chinhae.newsfeed.global.dto.Response;
@@ -40,7 +41,7 @@ public class PostController {
     }
 
     @GetMapping("/api/posts/{id}")
-    public Response<PostResponseDto> findOne(@PathVariable Long id,
+    public Response<PostView> findOne(@PathVariable Long id,
         @SessionAttribute(name = SessionKeyConst.PROFILE_KEY, required = false) ProfileInfo profile
     ) {
         return Response.of(postService.findById(id, getProfileIdOrNull(profile)));
@@ -84,7 +85,7 @@ public class PostController {
     ) {
         return Response.of(postService.findAllLikedPosts(profile.getId()));
     }
-    
+
     private Long getProfileIdOrNull(ProfileInfo profile) {
         return profile == null ? null : profile.getId();
     }

@@ -1,8 +1,11 @@
 package com.chinhae.newsfeed.domain.post.service;
 
 import com.chinhae.newsfeed.domain.base.dto.AuthorDto;
+import com.chinhae.newsfeed.domain.comment.dto.reponse.CommentResponseDto;
+import com.chinhae.newsfeed.domain.comment.service.CommentService;
 import com.chinhae.newsfeed.domain.post.dto.Request.PostRequestDto;
 import com.chinhae.newsfeed.domain.post.dto.Response.PostResponseDto;
+import com.chinhae.newsfeed.domain.post.dto.Response.PostView;
 import com.chinhae.newsfeed.domain.post.entity.Post;
 import com.chinhae.newsfeed.domain.post.entity.PostLike;
 import com.chinhae.newsfeed.domain.post.repository.PostLikeRepository;
@@ -24,6 +27,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
     private final ProfileRepository profileRepository;
+    private final CommentService commentService;
 
     @Transactional
     public PostResponseDto save(PostRequestDto dto, Long profileId) {
@@ -70,7 +74,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostResponseDto findById(Long id, Long profileId) {
+    public PostView findById(Long id, Long profileId) {
 
         Post post = postRepository.findById(id).orElseThrow(
             () -> new IllegalArgumentException("해당 id를 조회할 수 없습니다.")
@@ -81,15 +85,22 @@ public class PostService {
             isLiked = postLikeRepository.existsByPostIdAndProfileId(id, profileId);
         }
 
+        List<CommentResponseDto> comments = commentService.findByPost(id);
+
         //AuthorDto 객체 생성...
         AuthorDto author = new AuthorDto(post.getProfile().getId(),
             post.getProfile().getNickname(), post.getProfile().getProfileImgUrl());
 
         post.updateViewCount(post.getViewCount());//조회수 count
 
-        return new PostResponseDto(post.getId(), post.getContent(),
+        PostResponseDto posts = new PostResponseDto(post.getId(), post.getContent(),
             author, post.getLikeCount(), post.getCommentCount(), post.getViewCount(), isLiked,
             post.getCreated_at(), post.getUpdated_at());
+
+        return PostView.builder()
+            .post(posts)
+            .comments(comments)
+            .build();
     }
 
     @Transactional(readOnly = true)
