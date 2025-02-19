@@ -5,7 +5,6 @@ import com.chinhae.newsfeed.domain.comment.dto.reponse.CommentResponseDto;
 import com.chinhae.newsfeed.domain.comment.dto.request.CommentRequestDto;
 import com.chinhae.newsfeed.domain.comment.service.CommentService;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
-import com.chinhae.newsfeed.domain.profile.entity.Profile;
 import com.chinhae.newsfeed.global.dto.Response;
 import com.chinhae.newsfeed.global.messages.SessionKeyConst;
 import jakarta.validation.Valid;
