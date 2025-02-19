@@ -1,7 +1,7 @@
 package com.chinhae.newsfeed.domain.comment.entity;
 
 import com.chinhae.newsfeed.domain.base.entity.BaseEntity;
-import com.chinhae.newsfeed.temporary.post.entity.Post;
+import com.chinhae.newsfeed.domain.post.entity.Post;
 import com.chinhae.newsfeed.domain.profile.entity.Profile;
 import jakarta.persistence.*;
 import lombok.Getter;
