@@ -1,5 +1,6 @@
 package com.chinhae.newsfeed.domain.account.dto.Request;
 
+import com.chinhae.newsfeed.global.messages.ValidationConst;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 
@@ -7,6 +8,6 @@ import lombok.Getter;
 public class AccountUpdateRequestDto {
 
     private String currentPassword;
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*\\W)[^\\s]{8,16}$", message = "비밀번호는 8~16자, 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*\\W)[^\\s]{8,16}$", message = ValidationConst.WRONG_PASSWORD)
     private String newPassword;
 }

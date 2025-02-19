@@ -1,11 +1,19 @@
 package com.chinhae.newsfeed.domain.profile.service;
 
+import com.chinhae.newsfeed.domain.account.entity.Account;
+import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
+import com.chinhae.newsfeed.domain.account.entity.Account;
+import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileForm;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileView;
 import com.chinhae.newsfeed.domain.profile.entity.Profile;
 import com.chinhae.newsfeed.domain.profile.repository.ProfileRepository;
 import com.chinhae.newsfeed.global.messages.ProfileConst;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,48 +24,64 @@ import org.springframework.util.StringUtils;
 @Service
 public class ProfileService {
 
-  private final ProfileRepository repository;
+    private final ProfileRepository repository;
+    private final AccountRepository accountRepository;
 
-  public ProfileInfo addProfile(ProfileForm form) {
+    public ProfileInfo addProfile(Long accountId, ProfileForm form) {
+        if (!StringUtils.hasText(form.getNickname())) {
+            throw new IllegalArgumentException(ProfileConst.NICK_REQUIRED);
+        }
 
-    if (!StringUtils.hasText(form.getNickname())) {
-      throw new IllegalArgumentException(ProfileConst.NICK_REQUIRED);
+        // TODO nickname이 존재하면 해시값 붙이기
+        Account findAccount = accountRepository.findById(accountId).orElseThrow();
+
+        Profile newProfile = Profile.builder()
+            .account(findAccount)
+            .nickname(form.getNickname())
+            .profileImgUrl(form.getProfileImgUrl())
+            .bio(form.getBio())
+            .build();
+
+        return ProfileInfo.of(repository.save(newProfile));
     }
 
-    // TODO: SessionAttribute를 통해 user를 받아서 넣어줘야 함.
-    // TODO: Default 이미지 처리
+    // 계정 생성시 생성한 프로필이 기본 프로필
+    public Optional<ProfileInfo> getDefaultProfile(Long accountId) {
+        List<Profile> profile = repository.findAllByAccountId(accountId);
+        if (profile.isEmpty()) {
+            return Optional.empty();
+        }
 
-    Profile newProfile = Profile.builder()
-        .nickname(form.getNickname())
-        .profileImgUrl(form.getProfileImgUrl())
-        .bio(form.getBio())
-        .build();
+        Profile first = profile.stream()
+            .sorted(Comparator.comparingLong(Profile::getId))
+            .limit(1)
+            .findFirst().orElseThrow();
 
-    return ProfileInfo.of(repository.save(newProfile));
-  }
+        return Optional.of(ProfileInfo.of(first));
+    }
 
-  public ProfileView getProfile(Long profileId) {
-    Profile findProfile = repository.findById(profileId).orElseThrow();
-    return ProfileView.builder()
-        .profile(ProfileInfo.of(findProfile))
-        .build();
-  }
+    public ProfileView getProfile(Long profileId) {
+        Profile findProfile = repository.findById(profileId).orElseThrow();
+        return ProfileView.builder()
+            .profile(ProfileInfo.of(findProfile))
+            .build();
+    }
 
-  public ProfileForm getForm(Long profileId) {
-    Profile findProfile = repository.findById(profileId).orElseThrow();
-    return ProfileForm.of(findProfile);
-  }
+    public ProfileForm getForm(Long profileId) {
+        Profile findProfile = repository.findById(profileId).orElseThrow();
+        return ProfileForm.of(findProfile);
+    }
 
-  public ProfileInfo update(Long profileId, ProfileForm updateForm) {
-    Profile findProfile = repository.findById(profileId).orElseThrow();
-    findProfile.updateByForm(
-        updateForm.getNickname(), updateForm.getBio(), updateForm.getProfileImgUrl());
+    public ProfileInfo update(Long profileId, ProfileForm updateForm) {
+        Profile findProfile = repository.findById(profileId).orElseThrow();
+        findProfile.updateByForm(
+            updateForm.getNickname(), updateForm.getBio(), updateForm.getProfileImgUrl());
 
-    return ProfileInfo.of(findProfile);
-  }
+        return ProfileInfo.of(findProfile);
+    }
 
-  public void delete(Long profileId) {
-    Profile findProfile = repository.findById(profileId).orElseThrow();
-    repository.delete(findProfile);
-  }
+    public void delete(Long profileId) {
+        Profile findProfile = repository.findById(profileId).orElseThrow();
+        repository.delete(findProfile);
+    }
 }

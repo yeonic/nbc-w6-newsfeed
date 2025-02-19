@@ -1,10 +1,13 @@
 package com.chinhae.newsfeed.web.controller;
 
+import com.chinhae.newsfeed.domain.account.dto.Response.AccountResponseDto;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileForm;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileView;
 import com.chinhae.newsfeed.domain.profile.service.ProfileService;
 import com.chinhae.newsfeed.global.dto.Response;
+import com.chinhae.newsfeed.global.messages.SessionKeyConst;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,10 +33,12 @@ public class ProfileController {
 
     // TODO: 검색 기능 구현
 
-    @PostMapping
+    @PostMapping("/form")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response<ProfileInfo> addProfile(@Validated @RequestBody ProfileForm form) {
-        return Response.of(service.addProfile(form));
+    public Response<ProfileInfo> addProfile(
+        @SessionAttribute(name = SessionKeyConst.ACCOUNT_KEY) AccountResponseDto account,
+        @RequestBody ProfileForm form, HttpServletRequest request) {
+        return Response.of(service.addProfile(account.getId(), form));
     }
 
     @GetMapping("/{profileId}")
