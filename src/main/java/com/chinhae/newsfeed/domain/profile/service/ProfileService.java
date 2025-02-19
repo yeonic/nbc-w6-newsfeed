@@ -2,6 +2,7 @@ package com.chinhae.newsfeed.domain.profile.service;
 
 import com.chinhae.newsfeed.domain.account.entity.Account;
 import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
+import com.chinhae.newsfeed.domain.post.service.PostService;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileForm;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileView;
@@ -22,6 +23,7 @@ public class ProfileService {
 
     private final ProfileRepository repository;
     private final AccountRepository accountRepository;
+    private final PostService postService;
 
     public ProfileInfo addProfile(Long accountId, ProfileForm form) {
         String processedNickName = form.getNickname() + "_" + StringUtil.getRandomString(12);
@@ -55,8 +57,14 @@ public class ProfileService {
 
     public ProfileView getProfile(Long profileId) {
         Profile findProfile = repository.findById(profileId).orElseThrow();
+
+        // count update
+        findProfile.updateFriendsCount(repository.countFriendsByProfileId(profileId));
+        findProfile.updatePostsCount(repository.countPostsByProfileId(profileId));
+
         return ProfileView.builder()
             .profile(ProfileInfo.of(findProfile))
+            .posts(postService.findAllByProfileId(profileId))
             .build();
     }
 

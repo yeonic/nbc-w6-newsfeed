@@ -94,6 +94,13 @@ public class PostService {
             post.getCreated_at(), post.getUpdated_at());
     }
 
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> findAllByProfileId(Long profileId) {
+        return postRepository.findAllByProfileId(profileId).stream()
+            .map(PostResponseDto::of)
+            .toList();
+    }
+
     @Transactional
     public PostResponseDto update(Long id, PostRequestDto dto, Long profileId) {
         Post post = postRepository.findById(id).orElseThrow(
