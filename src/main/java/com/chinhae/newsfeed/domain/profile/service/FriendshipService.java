@@ -64,7 +64,6 @@ public class FriendshipService {
                 }
 
                 blockRel.changeStatus(FriendStatus.BLOCKED);
-                repository.save(blockRel);
             });
     }
 
