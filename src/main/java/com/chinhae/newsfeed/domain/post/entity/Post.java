@@ -52,6 +52,16 @@ public class Post extends BaseEntity {
         this.likeCount = 0;
     }
 
+    public void incrementCommentCount() {
+        commentCount++;
+    }
+
+    public void decrementCommentCount() {
+        if (this.commentCount > 0) {
+            this.commentCount--;
+        }
+    }
+
     public void update(String content) {
         this.content = content;
     }

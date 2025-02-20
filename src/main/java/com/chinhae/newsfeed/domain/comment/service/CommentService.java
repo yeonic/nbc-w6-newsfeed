@@ -30,7 +30,7 @@ public class CommentService {
     public CommentResponseDto saveComment(Long profileId, Long postId, CommentRequestDto requestDto) {
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException(CommentConst.COMMENT_NOT_EXIST));
+                .orElseThrow(() -> new IllegalArgumentException(CommentConst.POST_NOT_EXIST));
 
         Profile profile = profileRepository.findById(profileId)
                 .orElseThrow(() -> new IllegalArgumentException(CommentConst.PROFILE_NOT_MATCH));
@@ -38,6 +38,9 @@ public class CommentService {
         Comment comment = new Comment(requestDto.getContent(), profile, post);
 
         commentRepository.save(comment);
+
+        post.incrementCommentCount();
+        postRepository.save(post);
 
         AuthorDto authorDto = new AuthorDto(profile.getId(), profile.getNickname(), profile.getProfileImgUrl());
 
@@ -111,13 +114,19 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long profileId, Long commentId) {
+    public void deleteComment(Long profileId, Long postId, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException(CommentConst.COMMENT_NOT_EXIST));
 
         if(!comment.getProfile().getId().equals(profileId)) {
             throw new IllegalArgumentException(CommentConst.PROFILE_NOT_MATCH);
         }
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException(CommentConst.POST_NOT_EXIST));
+
+        post.decrementCommentCount();
+        postRepository.save(post);
 
         commentRepository.delete(comment);
     }
