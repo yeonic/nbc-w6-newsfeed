@@ -1,5 +1,6 @@
 package com.chinhae.newsfeed.domain.post.entity;
 
+import com.chinhae.newsfeed.domain.base.entity.BaseEntity;
 import com.chinhae.newsfeed.domain.profile.entity.Profile;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostLike {
+public class PostLike extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

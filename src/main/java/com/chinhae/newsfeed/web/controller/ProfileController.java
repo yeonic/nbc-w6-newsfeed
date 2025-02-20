@@ -6,6 +6,7 @@ import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileView;
 import com.chinhae.newsfeed.domain.profile.service.ProfileService;
 import com.chinhae.newsfeed.global.dto.Response;
+import com.chinhae.newsfeed.global.dto.paging.PagingData;
 import com.chinhae.newsfeed.global.messages.SessionKeyConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,8 +41,11 @@ public class ProfileController {
     }
 
     @GetMapping("/{profileId}")
-    public Response<ProfileView> profile(@PathVariable(name = "profileId") Long profileId) {
-        return Response.of(service.getProfile(profileId));
+    public Response<ProfileView> profile(
+        @ModelAttribute PagingData pagingData,
+        @PathVariable(name = "profileId") Long profileId
+    ) {
+        return Response.of(service.getProfile(profileId, pagingData));
     }
 
     @GetMapping("/{profileId}/settings")

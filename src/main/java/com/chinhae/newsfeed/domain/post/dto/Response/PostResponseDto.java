@@ -40,8 +40,8 @@ public class PostResponseDto {
             profile.getProfileImgUrl());
         return new PostResponseDto(
             post.getId(), post.getContent(), authorDto, post.getLikeCount(),
-            post.getCommentCount(), post.getViewCount(), post.getCreated_at(),
-            post.getUpdated_at());
+            post.getCommentCount(), post.getViewCount(), post.getCreatedAt(),
+            post.getUpdatedAt());
     }
 
     public static PostResponseDto of(Post post, boolean isLiked) {
@@ -50,7 +50,7 @@ public class PostResponseDto {
             profile.getProfileImgUrl());
         return new PostResponseDto(
             post.getId(), post.getContent(), authorDto, post.getLikeCount(),
-            post.getCommentCount(), post.getViewCount(), isLiked, post.getCreated_at(),
-            post.getUpdated_at());
+            post.getCommentCount(), post.getViewCount(), isLiked, post.getCreatedAt(),
+            post.getUpdatedAt());
     }
 }

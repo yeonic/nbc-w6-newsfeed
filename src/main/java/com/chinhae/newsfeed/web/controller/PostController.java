@@ -6,12 +6,16 @@ import com.chinhae.newsfeed.domain.post.dto.Response.PostView;
 import com.chinhae.newsfeed.domain.post.service.PostService;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
 import com.chinhae.newsfeed.global.dto.Response;
+import com.chinhae.newsfeed.global.dto.paging.PagingData;
+import com.chinhae.newsfeed.global.dto.paging.PagingResult;
 import com.chinhae.newsfeed.global.messages.SessionKeyConst;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,9 +39,11 @@ public class PostController {
 
     @GetMapping("/api/posts")//게시글 전체 조회
     public Response<List<PostResponseDto>> findAll(
-        @SessionAttribute(name = SessionKeyConst.PROFILE_KEY, required = false) ProfileInfo profile
+        @SessionAttribute(name = SessionKeyConst.PROFILE_KEY, required = false) ProfileInfo profile,
+        @ModelAttribute PagingData pagingData
     ) {
-        return Response.of(postService.findAll(getProfileIdOrNull(profile)));
+        Page<PostResponseDto> result = postService.findAll(getProfileIdOrNull(profile), pagingData);
+        return Response.of(result.getContent(), PagingResult.of(result, pagingData));
     }
 
     @GetMapping("/api/posts/{id}")
@@ -81,9 +87,11 @@ public class PostController {
 
     @GetMapping("/api/liked-posts")
     public Response<List<PostResponseDto>> likedPosts(
-        @SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo profile
+        @SessionAttribute(name = SessionKeyConst.PROFILE_KEY) ProfileInfo profile,
+        @ModelAttribute PagingData pagingData
     ) {
-        return Response.of(postService.findAllLikedPosts(profile.getId()));
+        Page<PostResponseDto> result = postService.findAllLikedPosts(profile.getId(), pagingData);
+        return Response.of(result.getContent(), PagingResult.of(result, pagingData));
     }
 
     private Long getProfileIdOrNull(ProfileInfo profile) {

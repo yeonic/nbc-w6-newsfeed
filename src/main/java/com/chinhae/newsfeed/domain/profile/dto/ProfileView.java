@@ -1,7 +1,6 @@
 package com.chinhae.newsfeed.domain.profile.dto;
 
-import com.chinhae.newsfeed.domain.post.dto.Response.PostResponseDto;
-import java.util.List;
+import com.chinhae.newsfeed.domain.post.dto.Response.PostPagingResponseDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,10 +11,10 @@ import lombok.NoArgsConstructor;
 public class ProfileView {
 
     private ProfileInfo profile;
-    private List<PostResponseDto> posts;
+    private PostPagingResponseDto posts;
 
     @Builder
-    public ProfileView(ProfileInfo profile, List<PostResponseDto> posts) {
+    public ProfileView(ProfileInfo profile, PostPagingResponseDto posts) {
         this.profile = profile;
         this.posts = posts;
     }
