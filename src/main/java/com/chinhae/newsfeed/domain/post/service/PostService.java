@@ -145,8 +145,13 @@ public class PostService {
 
     @Transactional
     public void doLike(Long postId, Long profileId) {
+        if (postLikeRepository.existsByPostIdAndProfileId(postId, profileId)) {
+            throw new IllegalStateException(PostConst.BAD_ACCESS);
+        }
+
         Post findPost = postRepository.findById(postId).orElseThrow();
         Profile findProfile = profileRepository.findById(profileId).orElseThrow();
+
         postLikeRepository.save(
             PostLike.builder()
                 .post(findPost)
@@ -160,7 +165,7 @@ public class PostService {
     @Transactional
     public void undoLike(Long postId, Long profileId) {
         PostLike findPostLike = postLikeRepository.findByPostIdAndProfileId(postId, profileId)
-            .orElseThrow();
+            .orElseThrow(() -> new IllegalArgumentException(PostConst.BAD_ACCESS));
         postLikeRepository.delete(findPostLike);
 
         // update like count

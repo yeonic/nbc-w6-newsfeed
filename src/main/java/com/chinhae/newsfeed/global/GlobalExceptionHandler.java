@@ -61,10 +61,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse<AbstractErrorDetail> handleException(Exception e) {
         log.info("handleException", e);
-        return ErrorResponse.of(ErrorCode.EXCEPTION, e.getMessage());
+        return ErrorResponse.of(ErrorCode.EXCEPTION, "오류가 발생했습니다.");
     }
 
 }
