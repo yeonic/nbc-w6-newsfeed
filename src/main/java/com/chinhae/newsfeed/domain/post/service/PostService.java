@@ -11,6 +11,7 @@ import com.chinhae.newsfeed.global.messages.PostConst;
 import com.chinhae.newsfeed.web.interceptor.exception.UnauthorizedException;
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final ProfileRepository profileRepository;
+
 
     @Transactional
     public PostResponseDto save(PostRequestDto dto, Long profileId) {
@@ -53,8 +55,7 @@ public class PostService {
                 post.getProfile().getNickname(), post.getProfile().getProfileImgUrl());
 
             PostResponseDto dto = new PostResponseDto(post.getId(), post.getContent(),
-                author, post.getLikeCount(), post.getCommentCount(),
-                post.getViewCount(),
+                author, post.getLikeCount(), post.getCommentCount(), post.getViewCount(),
                 post.getCreated_at(), post.getUpdated_at());
             dtos.add(dto);
         }
