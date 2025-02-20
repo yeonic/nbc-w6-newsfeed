@@ -37,8 +37,8 @@ public class FriendRequest {
             .fromProfileId(friendship.getFromProfile().getId())
             .toProfileId(friendship.getToProfile().getId())
             .status(friendship.getStatus())
-            .createdAt(friendship.getCreated_at())
-            .updatedAt(friendship.getUpdated_at())
+            .createdAt(friendship.getCreatedAt())
+            .updatedAt(friendship.getUpdatedAt())
             .build();
     }
 }

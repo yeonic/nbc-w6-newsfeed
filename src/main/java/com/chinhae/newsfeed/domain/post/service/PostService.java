@@ -12,12 +12,13 @@ import com.chinhae.newsfeed.domain.post.repository.PostLikeRepository;
 import com.chinhae.newsfeed.domain.post.repository.PostRepository;
 import com.chinhae.newsfeed.domain.profile.entity.Profile;
 import com.chinhae.newsfeed.domain.profile.repository.ProfileRepository;
+import com.chinhae.newsfeed.global.dto.paging.PagingData;
 import com.chinhae.newsfeed.global.messages.PostConst;
 import com.chinhae.newsfeed.web.interceptor.exception.UnauthorizedException;
-import java.util.ArrayList;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,31 +48,22 @@ public class PostService {
 
         return new PostResponseDto(savedPost.getId(), savedPost.getContent(),
             author, savedPost.getLikeCount(), savedPost.getCommentCount(),
-            savedPost.getViewCount(), savedPost.getCreated_at(), savedPost.getUpdated_at());
+            savedPost.getViewCount(), savedPost.getCreatedAt(), savedPost.getUpdatedAt());
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponseDto> findAll(Long profileId) {
-        List<Post> posts = postRepository.findAll();
+    public Page<PostResponseDto> findAll(Long profileId, PagingData pagingData) {
+        Pageable pageable = PagingData.toPageRequest(pagingData);
 
-        List<PostResponseDto> dtos = new ArrayList<>();
+        Page<Post> findPage = postRepository.findAll(pageable);
 
-        for (Post post : posts) {
+        return findPage.map(post -> {
             boolean isLiked = false;
             if (profileId != null) {
                 isLiked = postLikeRepository.existsByPostIdAndProfileId(post.getId(), profileId);
             }
-
-            //AuthorDto 객체 생성...
-            AuthorDto author = new AuthorDto(post.getProfile().getId(),
-                post.getProfile().getNickname(), post.getProfile().getProfileImgUrl());
-
-            PostResponseDto dto = new PostResponseDto(post.getId(), post.getContent(),
-                author, post.getLikeCount(), post.getCommentCount(), post.getViewCount(), isLiked,
-                post.getCreated_at(), post.getUpdated_at());
-            dtos.add(dto);
-        }
-        return dtos;
+            return PostResponseDto.of(post, isLiked);
+        });
     }
 
     @Transactional(readOnly = true)
@@ -96,7 +88,7 @@ public class PostService {
 
         PostResponseDto posts = new PostResponseDto(post.getId(), post.getContent(),
             author, post.getLikeCount(), post.getCommentCount(), post.getViewCount(), isLiked,
-            post.getCreated_at(), post.getUpdated_at());
+            post.getCreatedAt(), post.getUpdatedAt());
 
         return PostView.builder()
             .post(posts)
@@ -105,17 +97,18 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponseDto> findAllByProfileId(Long profileId) {
-        return postRepository.findAllByProfileId(profileId).stream()
-            .map(PostResponseDto::of)
-            .toList();
+    public Page<PostResponseDto> findAllByProfileId(Long profileId, PagingData pagingData) {
+        Pageable pageable = PagingData.toPageRequest(pagingData);
+        return postRepository.findAllByProfileId(profileId, pageable).map(PostResponseDto::of);
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponseDto> findAllLikedPosts(Long profileId) {
-        return postLikeRepository.findAllByProfileId(profileId).stream()
-            .map(postLike -> PostResponseDto.of(postLike.getPost(), true))
-            .toList();
+    public Page<PostResponseDto> findAllLikedPosts(Long profileId, PagingData pagingData) {
+        Pageable pageable = PagingData.toPageRequest(pagingData);
+
+        return postLikeRepository.findAllByProfileId(profileId, pageable)
+            .map(postLike -> PostResponseDto.of(postLike.getPost(), true));
+
     }
 
     @Transactional
@@ -135,7 +128,7 @@ public class PostService {
 
         return new PostResponseDto(post.getId(), post.getContent(),
             author, post.getLikeCount(), post.getCommentCount(), post.getViewCount(),
-            post.getCreated_at(), post.getUpdated_at());
+            post.getCreatedAt(), post.getUpdatedAt());
     }
 
     @Transactional

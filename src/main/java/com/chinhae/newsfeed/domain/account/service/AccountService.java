@@ -16,6 +16,7 @@ import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
 import com.chinhae.newsfeed.domain.profile.service.ProfileService;
 import com.chinhae.newsfeed.global.config.PasswordEncoder;
 import com.chinhae.newsfeed.global.messages.LoginConst;
+import com.chinhae.newsfeed.web.interceptor.exception.UnauthorizedException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class AccountService {
         accountRepository.save(user);
 
         return new AccountSignupResponsetDto(user.getEmail(), user.getUsername(),
-            user.getCreated_at());
+            user.getCreatedAt());
     }
 
     @Transactional
@@ -59,7 +60,7 @@ public class AccountService {
         }
 
         return new AccountLoginResponseDto(user.getId(), user.getEmail(), user.getUsername(),
-            user.getCreated_at());
+            user.getCreatedAt());
     }
 
     @Transactional(readOnly = true)
@@ -72,7 +73,9 @@ public class AccountService {
     }
 
     public AccountResponseDto findAccountByEmail(String email) {
-        Account account = accountRepository.findByEmail(email).orElseThrow();
+        Account account = accountRepository.findByEmail(email).orElseThrow(
+            () -> new UnauthorizedException(LoginConst.NEED_LOGIN)
+        );
         return new AccountResponseDto(account.getId(), account.getEmail(), account.getUsername());
     }
 
@@ -111,7 +114,7 @@ public class AccountService {
         user.update(requestDto.getNewPassword());
 
         return new AccountUpdateResponseDto(user.getEmail(), user.getUsername(),
-            user.getCreated_at(), user.getUpdated_at());
+            user.getCreatedAt(), user.getUpdatedAt());
     }
 
     private void createDefaultProfile(Long accountId, String email) {

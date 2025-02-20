@@ -2,17 +2,21 @@ package com.chinhae.newsfeed.domain.profile.service;
 
 import com.chinhae.newsfeed.domain.account.entity.Account;
 import com.chinhae.newsfeed.domain.account.repository.AccountRepository;
+import com.chinhae.newsfeed.domain.post.dto.Response.PostPagingResponseDto;
+import com.chinhae.newsfeed.domain.post.dto.Response.PostResponseDto;
 import com.chinhae.newsfeed.domain.post.service.PostService;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileForm;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileInfo;
 import com.chinhae.newsfeed.domain.profile.dto.ProfileView;
 import com.chinhae.newsfeed.domain.profile.entity.Profile;
 import com.chinhae.newsfeed.domain.profile.repository.ProfileRepository;
+import com.chinhae.newsfeed.global.dto.paging.PagingData;
 import com.chinhae.newsfeed.global.util.StringUtil;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +30,7 @@ public class ProfileService {
     private final PostService postService;
 
     public ProfileInfo addProfile(Long accountId, ProfileForm form) {
-        String processedNickName = form.getNickname() + "_" + StringUtil.getRandomString(12);
+        String processedNickName = form.getNickname() + "_" + StringUtil.getRandomString(6);
 
         Account findAccount = accountRepository.findById(accountId).orElseThrow();
 
@@ -55,16 +59,17 @@ public class ProfileService {
         return Optional.of(ProfileInfo.of(first));
     }
 
-    public ProfileView getProfile(Long profileId) {
+    public ProfileView getProfile(Long profileId, PagingData pagingData) {
         Profile findProfile = repository.findById(profileId).orElseThrow();
 
         // count update
         findProfile.updateFriendsCount(repository.countFriendsByProfileId(profileId));
         findProfile.updatePostsCount(repository.countPostsByProfileId(profileId));
 
+        Page<PostResponseDto> profilePage = postService.findAllByProfileId(profileId, pagingData);
         return ProfileView.builder()
             .profile(ProfileInfo.of(findProfile))
-            .posts(postService.findAllByProfileId(profileId))
+            .posts(PostPagingResponseDto.of(profilePage, pagingData))
             .build();
     }
 

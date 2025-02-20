@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,5 +23,15 @@ public class PagingResult {
         this.sortBy = sortBy;
         this.totalElement = totalElement;
         this.totalPage = totalPage;
+    }
+
+    public static <T> PagingResult of(Page<T> page, PagingData pagingData) {
+        return PagingResult.builder()
+            .pageNo(pagingData.getPageNum())
+            .pageSize(pagingData.getPageSize())
+            .sortBy(pagingData.getOrderBy().getValue())
+            .totalElement(page.getTotalElements())
+            .totalPage(page.getTotalPages())
+            .build();
     }
 }
